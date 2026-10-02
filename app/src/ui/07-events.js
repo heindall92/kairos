@@ -177,3 +177,6 @@ if (/[?&]test\b/.test(location.search)) window.__KAIROS__ = { get state() { retu
 let segRz = null;
 window.addEventListener('resize', () => { clearTimeout(segRz); segRz = setTimeout(() => { moveThumb('#top .phases'); moveThumb('#view .tabs'); }, 80); });
 requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add('ready')));
+/* Borde de desplazamiento: la línea bajo la cabecera solo aparece cuando hay contenido pasando por debajo */
+const edge = () => document.documentElement.toggleAttribute('data-scrolled', window.scrollY > 4);
+window.addEventListener('scroll', edge, { passive: true }); edge();

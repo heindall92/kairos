@@ -61,8 +61,11 @@ function render() {
   const ae = document.activeElement; const active = ae && ae.id; const fkey = !active && ae !== document.body ? focusKey(ae) : null;
   let sel = null; try { if (ae && typeof ae.selectionStart === 'number') sel = [ae.selectionStart, ae.selectionEnd]; } catch (e) { sel = null; }
   ui.entering = ui._rv !== ui.view; ui._rv = ui.view;
+  livethumbs();
   $('#top').innerHTML = renderTop();
   $('#tabbar').innerHTML = renderTabbar();
+  // Con un menú abierto, el resto de la página queda inerte: ni foco ni clics detrás del menú
+  $('#main').inert = !!ui.menu; $('#tabbar').inert = !!ui.menu;
   const V = { inicio: vInicio, nuevo: vNuevo, perfil: vPerfil, ajustes: vAjustes, ayuda: vAyuda, panel: vPanel, funciones: vFunciones, dependencias: vDependencias, recuperacion: vRecuperacion, copias: vCopias, crisis: vCrisis, pruebas: vPruebas, preauditoria: vPreauditoria, exportar: vExportar };
   $('#view').innerHTML = (state && isDemo() && PROJECT_VIEWS.includes(ui.view) ? demoBanner() : '') + (V[ui.view] || vInicio)();
   document.documentElement.toggleAttribute('data-sub', !!(state && phaseOf(ui.view)));
@@ -81,8 +84,17 @@ function render() {
   else if (fkey) { const el = document.querySelector('#top ' + fkey + ', #view ' + fkey + ', #palette ' + fkey + ', #tabbar ' + fkey); if (el) el.focus({ preventScroll: true }); }
   if (ui.confirm) { const c = document.querySelector('#view [data-act="del-project"], #view [data-act="wipe"]'); if (c && fkey && /data-act="ask"/.test(fkey)) c.focus({ preventScroll: true }); }
 }
-/* Control segmentado: la píldora se desliza desde la posición anterior hasta la opción activa */
+/* Control segmentado: la píldora se desliza hasta la opción activa partiendo de donde está en pantalla en ese
+ * instante (valor de presentación), así un cambio a mitad de recorrido no salta: se redirige. */
 const thumbs = {};
+function livethumbs() {
+  for (const sel of ['#top .phases', '#view .tabs']) {
+    const host = document.querySelector(sel); const th = host && host.querySelector('.thumb');
+    if (!th || th.style.opacity === '0') continue;
+    const hr = host.getBoundingClientRect(); const tr2 = th.getBoundingClientRect();
+    if (tr2.width) thumbs[sel] = [tr2.left - hr.left - host.clientLeft, tr2.width];
+  }
+}
 function moveThumb(selector) {
   const host = document.querySelector(selector); if (!host) return;
   const th = host.querySelector('.thumb'); const on = host.querySelector('[aria-current="page"], [aria-selected="true"]');
@@ -115,14 +127,14 @@ function renderTop() {
   const sub = state && ph ? `<nav class="subnav" aria-label="${ph.label}"><span class="sub-phase"><span class="pn num">${ph.n}</span>${ph.label}</span>${ph.views.map((v) => `<button type="button" data-act="nav" data-view="${v}"${ui.view === v ? ' aria-current="page"' : ''}>${icon(VIEW_IC[v], 15)}<span>${TITLES[v]}</span>${v === 'preauditoria' && countSev('NC mayor') ? `<span class="count crit">${countSev('NC mayor')}</span>` : ''}</button>`).join('')}</nav>` : '';
   return `<div class="bar">
     <button type="button" class="brand" data-act="nav" data-view="inicio" aria-label="KAIROS · Inicio"${ui.view === 'inicio' ? ' aria-current="page"' : ''}>${logo(28)}<span class="wordmark">Kairos</span></button>
-    <div class="pop-wrap">${pill}${ui.menu === 'proyectos' ? projectMenu() : ''}</div>
+    <div class="pop-wrap">${pill}${ui.menu === 'proyectos' ? '<div class="menu-scrim" aria-hidden="true"></div>' + projectMenu() : ''}</div>
     ${phases}
     <div class="tools">
       <button type="button" class="search-btn" data-act="palette" aria-label="Buscar y ejecutar comandos">${icon('search', 16)}<span>Buscar</span><kbd>⌘K</kbd></button>
       <div class="lang-switch" role="group" aria-label="Idioma"><button type="button" data-act="set" data-k="idioma" data-v="es" aria-pressed="${ws.settings.idioma !== 'en'}" title="Español">ES</button><button type="button" data-act="set" data-k="idioma" data-v="en" aria-pressed="${ws.settings.idioma === 'en'}" title="English">EN</button></div>
       <button type="button" class="icon-btn hide-sm" data-act="cycle-theme" aria-label="Cambiar tema" title="Tema: ${ws.settings.tema}">${icon(temaIc, 18)}</button>
       <button type="button" class="icon-btn hide-sm" data-act="nav" data-view="ayuda" aria-label="Ayuda"${ui.view === 'ayuda' ? ' aria-current="page"' : ''}>${icon('help', 18)}</button>
-      <div class="pop-wrap"><button type="button" class="avatar-btn" data-act="menu" data-menu="cuenta" aria-haspopup="true" aria-expanded="${ui.menu === 'cuenta'}" aria-label="Cuenta y ajustes">${avatar(32)}</button>${ui.menu === 'cuenta' ? accountMenu() : ''}</div>
+      <div class="pop-wrap"><button type="button" class="avatar-btn" data-act="menu" data-menu="cuenta" aria-haspopup="true" aria-expanded="${ui.menu === 'cuenta'}" aria-label="Cuenta y ajustes">${avatar(32)}</button>${ui.menu === 'cuenta' ? '<div class="menu-scrim" aria-hidden="true"></div>' + accountMenu() : ''}</div>
     </div></div>${sub}`;
 }
 function renderTabbar() {
