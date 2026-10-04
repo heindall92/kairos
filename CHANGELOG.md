@@ -2,8 +2,9 @@
 
 ## 1.0.1 · octubre de 2026
 
+- **Herramientas GRC del autor:** Ayuda → Acerca de muestra tarjetas para abrir Rosetta y ENS Compliance Studio o ver su código; KAIROS figura como «Estás aquí».
 - **Perfil:** los seis colores del avatar no se veían. El estilo de los círculos usaba `all: unset` y borraba el fondo que pone cada color; ahora se ven en claro y en oscuro.
-- **Pruebas:** 3 comprobaciones nuevas de extremo a extremo (86 en total) verifican que los colores del avatar y del acento se ven, son distintos y que el color del avatar cambia también el acento.
+- **Pruebas:** 6 comprobaciones nuevas de extremo a extremo (89 en total). Verifican que los colores del avatar y del acento se ven y son distintos, que el color del avatar cambia también el acento y que las tarjetas de herramientas enlazan bien.
 
 ## 1.0.0 · octubre de 2026
 

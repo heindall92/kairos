@@ -182,6 +182,18 @@ const FAQ = [
   ['¿Dónde se guardan mis datos?', 'Solo en este navegador. No hay servidor ni cuentas. Usa Ajustes → Copia de seguridad para llevarte tus proyectos a otro equipo.'],
   ['¿Sirve para organizaciones fuera del ENS?', 'Sí. Las reglas de ISO 22301 e ISO/IEC 27001 aplican igual; la categoría solo modula qué se exige de op.cont.2 a op.cont.4.']
 ];
+/* Herramientas GRC del autor: el mismo bloque en Rosetta, ENS Compliance Studio y KAIROS */
+const SUITE = [
+  ['rosetta', 'Rosetta', 'Mapa multinorma: ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en 115 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.', 'https://heindall92.github.io/rosetta_multinorma/', 'https://github.com/heindall92/rosetta_multinorma'],
+  ['ens', 'ENS Compliance Studio', 'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.', 'https://heindall92.github.io/grc_ens_compliance_studio/app/dist/ens-compliance-studio.html', 'https://github.com/heindall92/grc_ens_compliance_studio'],
+  ['kairos', 'KAIROS', 'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.', 'https://heindall92.github.io/kairos/', 'https://github.com/heindall92/kairos']
+];
+function suiteGrc() {
+  const ext = (h, l, ic) => `<a class="btn sm" href="${h}" target="_blank" rel="noopener noreferrer">${icon(ic, 14)}${l}</a>`;
+  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan: la SoA de ENS Compliance Studio se importa en Rosetta, y KAIROS cubre op.cont, la continuidad que las otras dos solo enumeran.</p>
+    <div class="suite-grid">${SUITE.map(([id, n, d, app, repo]) => `<article class="suite-card${id === 'kairos' ? ' here' : ''}"><div class="suite-hd"><b>${n}</b>${id === 'kairos' ? '<span class="badge accent">Estás aquí</span>' : ''}</div><p>${d}</p>
+      <div class="row">${id === 'kairos' ? ext(repo, 'Código', 'external') : ext(app, 'Abrir la app', 'arrowRight') + ext(repo, 'Código', 'external')}</div></article>`).join('')}</div></section>`;
+}
 function vAyuda() {
   const tabs = [['inicio', 'Primeros pasos', 'flag'], ['metodo', 'Cómo calcula', 'gauge'], ['glosario', 'Glosario', 'book'], ['reglas', 'Reglas de preauditoría', 'shieldCheck'], ['atajos', 'Atajos de teclado', 'keyboard'], ['faq', 'Preguntas frecuentes', 'help'], ['acerca', 'Acerca de', 'info']];
   let body = '';
@@ -215,7 +227,7 @@ function vAyuda() {
     body = `<div class="about"><p><b>KAIROS ${VERSION}</b> · Continuidad de negocio: BIA, BCP y DRP. Proyecto del Máster en Ciberseguridad &amp; IA (Evolve Academy), módulo de Gobierno, Riesgo y Cumplimiento, a partir de la plantilla formativa de BIA y BCP del curso.</p>
       <div class="about-card"><span class="avatar c-green" style="--s:52px">YR</span><div><b>Yoandy Ramírez Delgado</b><small>Diseño y desarrollo · Junior Pentester · eJPTv2 · AI Governance (ISO 42001)</small></div></div>
       <div class="about-links">${[['https://www.linkedin.com/in/yoandyrd92/', 'LinkedIn'], ['https://github.com/heindall92', 'GitHub'], ['https://yoandyramirez.com', 'Portafolio'], ['https://profile.hackthebox.com/profile/019c5812-b4ca-7315-b12f-14db6d2b42fa', 'HackTheBox'], ['mailto:yoandyramirezdelgado@gmail.com', 'Correo']].map(([h, l]) => `<a class="btn sm" href="${h}" target="_blank" rel="noopener noreferrer">${icon('external', 14)}${l}</a>`).join('')}</div>
-      <p>Otras herramientas del autor: <a href="https://github.com/heindall92/rosetta_multinorma" target="_blank" rel="noopener noreferrer">Rosetta</a> (ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001) y <a href="https://github.com/heindall92/grc_ens_compliance_studio" target="_blank" rel="noopener noreferrer">ENS Compliance Studio</a> (categorización, MAGERIT y SoA).</p>
+      ${suiteGrc()}
       <p>Normativa de referencia: ISO 22301:2019, ISO/IEC 27001:2022 (A.5.29, A.5.30, A.8.13), Real Decreto 311/2022 (op.cont.1 a op.cont.4, mp.info.6), CCN-STIC 817.</p>
       <p>Herramienta de apoyo y preauditoría: no sustituye a la auditoría formal. Los casos de ejemplo son ficticios.</p>
       <p class="muted small">Exportación a Excel con xlsx-js-style 1.2.0 (Apache-2.0). Código bajo licencia GPLv2.</p></div>`;

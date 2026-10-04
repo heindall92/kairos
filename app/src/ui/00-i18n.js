@@ -308,6 +308,11 @@ const EN = {
   'Normativa de referencia: ISO 22301:2019, ISO/IEC 27001:2022 (A.5.29, A.5.30, A.8.13), Real Decreto 311/2022 (op.cont.1 a op.cont.4, mp.info.6), CCN-STIC 817.': 'Reference standards: ISO 22301:2019, ISO/IEC 27001:2022 (A.5.29, A.5.30, A.8.13), Royal Decree 311/2022 (op.cont.1 to op.cont.4, mp.info.6), CCN-STIC 817.',
   'Herramienta de apoyo y preauditoría: no sustituye a la auditoría formal. Los casos de ejemplo son ficticios.': 'A support and pre-audit tool: it does not replace a formal audit. The sample cases are fictitious.',
   'Exportación a Excel con xlsx-js-style 1.2.0 (Apache-2.0). Código bajo licencia GPLv2.': 'Excel export with xlsx-js-style 1.2.0 (Apache-2.0). Code licensed under GPLv2.',
+  'Herramientas GRC del autor': 'GRC tools by the author', 'Estás aquí': 'You are here', 'Abrir la app': 'Open the app', 'Código': 'Code',
+  'Se complementan: la SoA de ENS Compliance Studio se importa en Rosetta, y KAIROS cubre op.cont, la continuidad que las otras dos solo enumeran.': 'They work together: the ENS Compliance Studio SoA imports into Rosetta, and KAIROS covers op.cont, the continuity the other two only list.',
+  'Mapa multinorma: ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en 115 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.': 'Multi-framework map: ENS, ISO/IEC 27001, NIS2 and ISO/IEC 42001 in 115 unified controls, with ENS ↔ ISO equivalences aligned with CCN-STIC 825.',
+  'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.': 'System categorisation, MAGERIT risk analysis, Statement of Applicability and ENS pre-audit.',
+  'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.': 'Business continuity: BIA, BCP and DRP with the critical recovery path of each function.',
   // Avisos
   'Activo añadido': 'Asset added', 'Función añadida': 'Function added', 'Proveedor añadido': 'Supplier added', 'Proveedor eliminado': 'Supplier deleted', 'Prueba registrada': 'Test recorded',
   'Caso restablecido a su estado original': 'Case reset to its original state', 'Casos de ejemplo cerrados': 'Sample cases closed', 'Datos borrados': 'Data deleted',

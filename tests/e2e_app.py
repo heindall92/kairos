@@ -237,6 +237,14 @@ with sync_playwright() as p:
     ok(len(acentos) == 6 and len(set(acentos)) == 6 and "rgba(0, 0, 0, 0)" not in acentos, "Ajustes: los 6 colores de acento se ven y son distintos")
     page.click('#view .swatch[data-v="green"]')
 
+    print("Herramientas GRC del autor")
+    J(f"{K}.go('ayuda')"); page.click('[data-act="help-tab"][data-tab="acerca"]')
+    ok(page.locator(".suite-card").count() == 3, "Acerca de: tres tarjetas (Rosetta, ENS Compliance Studio y KAIROS)")
+    ok("KAIROS" in page.locator(".suite-card.here").inner_text() and page.locator(".suite-card.here a").count() == 1, "KAIROS aparece como «Estás aquí» y solo enlaza a su código")
+    suite = J("[...document.querySelectorAll('.suite a')].map(a => [a.href, a.target, a.rel])")
+    hosts = ["heindall92.github.io/rosetta_multinorma", "github.com/heindall92/rosetta_multinorma", "heindall92.github.io/grc_ens_compliance_studio", "github.com/heindall92/grc_ens_compliance_studio", "github.com/heindall92/kairos"]
+    ok(all(any(h in u for u, _, _ in suite) for h in hosts) and all(t == "_blank" and "noopener" in r for _, t, r in suite), "Enlaces a las apps y repositorios, en pestaña nueva con noopener")
+
     print("Seguridad del documento")
     ok(J("window.__csp.length") == 0, f"Sin infracciones de la CSP durante toda la sesión ({J('window.__csp')})")
     J("try { const s = document.createElement('script'); s.textContent = 'window.__inj = 1'; document.body.appendChild(s); } catch (e) {}")
