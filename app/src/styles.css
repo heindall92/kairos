@@ -536,8 +536,12 @@ input.late { box-shadow: inset 0 0 0 1.5px var(--crit); color: var(--crit); }
 .profile-card h2 { margin-top: 8px; }
 .swatches { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 8px 0; }
 .set-ctl .swatches { justify-content: flex-end; margin: 0; }
-.swatch { all: unset; box-sizing: border-box; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .15); }
+/* Sin «all: unset»: borraría el fondo que ponen las clases de color (.c-* del avatar, .a-* del acento) */
+.swatch { appearance: none; border: 0; padding: 0; margin: 0; box-sizing: border-box; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); transition: transform .15s var(--ease); }
+.swatch:hover { transform: scale(1.08); }
 .swatch.on { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink); }
+:root[data-theme="dark"] .swatch:not(.on) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .swatch:not(.on) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); } }
 .swatch:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent-g) 70%, transparent); outline-offset: 3px; }
 .a-green { background: #30d158; } .a-blue { background: #0071e3; } .a-teal { background: #64d2ff; } .a-amber { background: #ff9f0a; } .a-rose { background: #ff375f; } .a-graphite { background: #3a3a3c; }
 .pf-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 10px; padding-top: 14px; box-shadow: inset 0 .5px 0 var(--sep); }

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z+lSeMniblnkC7MlgH49SDsRYTW++ImAmgMUtwfdlq0=' 'sha256-GLSUKRsmChD6mYKaq8vJfcv47bmy9Ac84Pye0tD1bVU=' 'sha256-Cdd2o+jk/2eYRbUAOSR4S2YZY8Z3gAuTMCwq0Cskj04=' 'sha256-HHq/KZP/LNYeUI+SaOms2gCYyXlvOSXSug0leQcmU+I='; style-src 'sha256-+KJI3ctJ7lWv2dIAflY2ERrZdBJxechPL4ou/DjQyuc='; style-src-attr 'unsafe-inline'; font-src 'none'; img-src data: blob:; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z+lSeMniblnkC7MlgH49SDsRYTW++ImAmgMUtwfdlq0=' 'sha256-GLSUKRsmChD6mYKaq8vJfcv47bmy9Ac84Pye0tD1bVU=' 'sha256-+62Nzyn/BSkAaIjvjgAwXO+QsnUqqzVfRExnwOtFGDI=' 'sha256-HHq/KZP/LNYeUI+SaOms2gCYyXlvOSXSug0leQcmU+I='; style-src 'sha256-DdndF0DZS+0N69UQH+9/kBS+ubi78KhaZCxrKalprfM='; style-src-attr 'unsafe-inline'; font-src 'none'; img-src data: blob:; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
@@ -548,8 +548,12 @@ input.late { box-shadow: inset 0 0 0 1.5px var(--crit); color: var(--crit); }
 .profile-card h2 { margin-top: 8px; }
 .swatches { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 8px 0; }
 .set-ctl .swatches { justify-content: flex-end; margin: 0; }
-.swatch { all: unset; box-sizing: border-box; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .15); }
+/* Sin «all: unset»: borraría el fondo que ponen las clases de color (.c-* del avatar, .a-* del acento) */
+.swatch { appearance: none; border: 0; padding: 0; margin: 0; box-sizing: border-box; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); transition: transform .15s var(--ease); }
+.swatch:hover { transform: scale(1.08); }
 .swatch.on { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink); }
+:root[data-theme="dark"] .swatch:not(.on) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .swatch:not(.on) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); } }
 .swatch:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent-g) 70%, transparent); outline-offset: 3px; }
 .a-green { background: #30d158; } .a-blue { background: #0071e3; } .a-teal { background: #64d2ff; } .a-amber { background: #ff9f0a; } .a-rose { background: #ff375f; } .a-graphite { background: #3a3a3c; }
 .pf-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 10px; padding-top: 14px; box-shadow: inset 0 .5px 0 var(--sep); }
@@ -1553,7 +1557,7 @@ const E = window.KairosEngine;
 /* Librería para escribir el Excel propio (nunca lee ficheros ajenos). La versión autónoma la lleva incrustada
  * sin ejecutar; la alojada la pide al CDN con integridad (SRI). */
 const XLSX_LIB = { id: 'xlsx-escribir', cdn: 'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js', sri: 'sha384-OUW9euuUyxyHcAhTqbhI+Iyb8LMssXt/cpz0yXhs9UWG2/R/uaWdakx/4cfww7Vb' };
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const $ = (s, r = document) => r.querySelector(s);

@@ -4,7 +4,7 @@ const E = window.KairosEngine;
 /* Librería para escribir el Excel propio (nunca lee ficheros ajenos). La versión autónoma la lleva incrustada
  * sin ejecutar; la alojada la pide al CDN con integridad (SRI). */
 const XLSX_LIB = { id: 'xlsx-escribir', cdn: 'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js', sri: 'sha384-OUW9euuUyxyHcAhTqbhI+Iyb8LMssXt/cpz0yXhs9UWG2/R/uaWdakx/4cfww7Vb' };
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const $ = (s, r = document) => r.querySelector(s);

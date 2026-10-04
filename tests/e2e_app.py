@@ -226,6 +226,17 @@ with sync_playwright() as p:
     ok(J("document.documentElement.getAttribute('data-theme')") in ["dark", "light"], "El tema cambia desde la cabecera")
     page.screenshot(path=str(OUT / "05_tema.png"))
 
+    print("Colores del perfil y de acento")
+    J(f"{K}.go('perfil')")
+    fondos = J("[...document.querySelectorAll('#view .swatch')].map(e => getComputedStyle(e).backgroundColor)")
+    ok(len(fondos) == 6 and len(set(fondos)) == 6 and "rgba(0, 0, 0, 0)" not in fondos, f"Perfil: los 6 colores del avatar se ven y son distintos ({fondos})")
+    page.click('#view .swatch[data-c="teal"]')
+    ok(J("document.documentElement.getAttribute('data-accent')") == "teal" and J(f"{K}.ws.profile.color") == "teal", "Elegir un color de avatar cambia también el acento de la interfaz")
+    J(f"{K}.go('ajustes')")
+    acentos = J("[...document.querySelectorAll('#view .swatch')].map(e => getComputedStyle(e).backgroundColor)")
+    ok(len(acentos) == 6 and len(set(acentos)) == 6 and "rgba(0, 0, 0, 0)" not in acentos, "Ajustes: los 6 colores de acento se ven y son distintos")
+    page.click('#view .swatch[data-v="green"]')
+
     print("Seguridad del documento")
     ok(J("window.__csp.length") == 0, f"Sin infracciones de la CSP durante toda la sesión ({J('window.__csp')})")
     J("try { const s = document.createElement('script'); s.textContent = 'window.__inj = 1'; document.body.appendChild(s); } catch (e) {}")

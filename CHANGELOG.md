@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.0.1 · octubre de 2026
+
+- **Perfil:** los seis colores del avatar no se veían. El estilo de los círculos usaba `all: unset` y borraba el fondo que pone cada color; ahora se ven en claro y en oscuro.
+- **Pruebas:** 3 comprobaciones nuevas de extremo a extremo (86 en total) verifican que los colores del avatar y del acento se ven, son distintos y que el color del avatar cambia también el acento.
+
 ## 1.0.0 · octubre de 2026
 
 Primera versión, construida a partir de la plantilla formativa de BIA y BCP del módulo de GRC del máster.

@@ -83,7 +83,7 @@ Es un único fichero HTML. Funciona sin conexión, no tiene servidor y no hace n
         <img src="docs/assets/stack/pruebas.svg" height="52" alt="node:test">
         <img src="docs/assets/stack/playwright.svg" height="52" alt="Playwright">
         <img src="docs/assets/stack/axe.svg" height="52" alt="axe-core"><br>
-        <sub><code>node:test 15 · Playwright 83 · axe-core 0 infracciones</code></sub>
+        <sub><code>node:test 15 · Playwright 86 · axe-core 0 infracciones</code></sub>
       </td>
     </tr>
     <tr>
@@ -103,7 +103,7 @@ Es un único fichero HTML. Funciona sin conexión, no tiene servidor y no hace n
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="2"><code>version: 1.0.0&nbsp;&nbsp;·&nbsp;&nbsp;pruebas: 98 ok&nbsp;&nbsp;·&nbsp;&nbsp;licencia: GPLv2</code></td>
+      <td colspan="2"><code>version: 1.0.1&nbsp;&nbsp;·&nbsp;&nbsp;pruebas: 101 ok&nbsp;&nbsp;·&nbsp;&nbsp;licencia: GPLv2</code></td>
     </tr>
   </tfoot>
 </table>
@@ -312,7 +312,7 @@ pip install -r requirements.txt && python -m playwright install chromium
 | Suite | Pruebas | Qué comprueba |
 |---|---|---|
 | Motor (`tests/engine.test.js`) | 15 | Curva de impacto, MTPD y criticidad; ruta crítica, tiempos típicos y ciclos; RTO alcanzable por activos, proveedores y funciones; RPO solo con activos de datos; RTO frente a MTPD; activación del plan; exigencias por categoría del ENS; pruebas; los hallazgos esperados de los tres casos y la integridad de las 28 reglas. |
-| End-to-end (`tests/e2e_app.py`) | 83 | Primera ejecución, las tres fases y nueve vistas, recálculo en vivo por la cadena de dependencias, impacto y MTPD, copias, crisis, pruebas, preauditoría, asistente, exportaciones (Markdown, CSV, JSON y Excel generado sin red), importación hostil, persistencia, buscador, atajos, inglés, tema, móvil sin desplazamiento horizontal, CSP, XSS, prototype pollution e inyección de fórmulas. |
+| End-to-end (`tests/e2e_app.py`) | 86 | Primera ejecución, las tres fases y nueve vistas, colores de avatar y de acento, recálculo en vivo por la cadena de dependencias, impacto y MTPD, copias, crisis, pruebas, preauditoría, asistente, exportaciones (Markdown, CSV, JSON y Excel generado sin red), importación hostil, persistencia, buscador, atajos, inglés, tema, móvil sin desplazamiento horizontal, CSP, XSS, prototype pollution e inyección de fórmulas. |
 | Accesibilidad (`tests/a11y_app.py`) | 0 infracciones | axe-core (WCAG 2.2 A/AA) en todas las vistas, los tres casos, filas desplegadas, menús y buscador, en claro y oscuro, a 1440 y 390 px. |
 
 Las pruebas usan una fecha fija: los casos tienen fechas de restauración y de revisión, y el resultado no debe depender del día en que se ejecutan. La [integración continua](.github/workflows/tests.yml) ejecuta todo en cada *push* y comprueba que `dist/` está al día.
