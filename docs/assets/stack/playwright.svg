@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Playwright">
+  <title>Playwright</title>
+  <rect width="256" height="256" rx="57" fill="#40C8E0"/>
+  <g transform="translate(80 46) scale(4)" fill="none" stroke="#0B0B0C" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></g>
+  <text x="128" y="206" text-anchor="middle" font-family="ui-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="700" font-size="26" letter-spacing="-0.4" fill="#0B0B0C">Playwright</text>
+</svg>

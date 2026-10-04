@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="KAIROS · Continuidad de negocio">
+  <title>KAIROS · Continuidad de negocio</title>
+  <style>
+    .w1 { animation: flota 24s linear infinite; } .w2 { animation: flota 16s linear infinite reverse; }
+    .t { animation: sube 1.2s cubic-bezier(.32,.72,0,1) both; }
+    .r { stroke-dasharray: 1 1; animation: anillo 1.6s cubic-bezier(.32,.72,0,1) both; }
+    @keyframes flota { from { transform: translateX(0); } to { transform: translateX(-640px); } }
+    @keyframes sube { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes anillo { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+    @media (prefers-reduced-motion: reduce) { .w1, .w2, .t, .r { animation: none; } }
+  </style>
+  <clipPath id="c"><rect width="1280" height="320" rx="32"/></clipPath>
+  <g clip-path="url(#c)">
+    <rect width="1280" height="320" fill="#0B0B0C"/>
+    <g class="w1"><path d="M0 268 C160 254,160 254,320 268 S480 282,640 268 C800 254,800 254,960 268 S1120 282,1280 268 C1440 254,1440 254,1600 268 S1760 282,1920 268 V400 H0 Z" fill="#30D158" fill-opacity="0.32"/></g>
+    <g class="w2"><path d="M0 286 C160 274,160 274,320 286 S480 298,640 286 C800 274,800 274,960 286 S1120 298,1280 286 C1440 274,1440 274,1600 286 S1760 298,1920 286 V400 H0 Z" fill="#30D158"/></g>
+  </g>
+  <g class="t">
+    <circle cx="640" cy="74" r="34" fill="none" stroke="#30D158" stroke-opacity=".2" stroke-width="7"/><path class="r" style="animation-delay:0ms" d="M640.00 40.00 A34 34 0 1 1 613.80 52.33" fill="none" stroke="#30D158" stroke-width="7" stroke-linecap="round" pathLength="1"/><circle cx="640" cy="74" r="24" fill="none" stroke="#30D158" stroke-opacity=".2" stroke-width="7"/><path class="r" style="animation-delay:120ms" d="M640.00 50.00 A24 24 0 1 1 623.57 91.50" fill="none" stroke="#30D158" stroke-width="7" stroke-linecap="round" pathLength="1"/><circle cx="640" cy="74" r="14" fill="none" stroke="#FF453A" stroke-opacity=".2" stroke-width="7"/><path class="r" style="animation-delay:240ms" d="M640.00 60.00 A14 14 0 0 1 648.23 85.33" fill="none" stroke="#FF453A" stroke-width="7" stroke-linecap="round" pathLength="1"/>
+    <text x="640" y="176" text-anchor="middle" font-family="ui-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="800" font-size="64" letter-spacing="2" fill="#FFFFFF">KAIROS</text>
+    <text x="640" y="214" text-anchor="middle" font-family="ui-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="500" font-size="22" letter-spacing="-0.2" fill="#A1A1A6">Continuidad de negocio · BIA · BCP · DRP · ruta crítica de recuperación</text>
+  </g>
+</svg>

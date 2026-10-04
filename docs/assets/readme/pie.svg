@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="130" viewBox="0 0 1280 130" role="img" aria-label="Fin">
+  <style>
+    .w1 { animation: flota 24s linear infinite; } .w2 { animation: flota 16s linear infinite reverse; }
+    .t { animation: sube 1.2s cubic-bezier(.32,.72,0,1) both; }
+    .r { stroke-dasharray: 1 1; animation: anillo 1.6s cubic-bezier(.32,.72,0,1) both; }
+    @keyframes flota { from { transform: translateX(0); } to { transform: translateX(-640px); } }
+    @keyframes sube { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes anillo { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+    @media (prefers-reduced-motion: reduce) { .w1, .w2, .t, .r { animation: none; } }
+  </style>
+  <g class="w1"><path d="M0 70 C160 56,160 56,320 70 S480 84,640 70 C800 56,800 56,960 70 S1120 84,1280 70 C1440 56,1440 56,1600 70 S1760 84,1920 70 V400 H0 Z" fill="#30D158" fill-opacity="0.32"/></g>
+  <g class="w2"><path d="M0 88 C160 76,160 76,320 88 S480 100,640 88 C800 76,800 76,960 88 S1120 100,1280 88 C1440 76,1440 76,1600 88 S1760 100,1920 88 V400 H0 Z" fill="#30D158"/></g>
+</svg>
