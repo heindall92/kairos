@@ -25,7 +25,12 @@ const readText = (f, cb) => { const r = new FileReader(); r.onload = () => cb(St
 document.addEventListener('change', (ev) => {
   const el = ev.target;
   if (el.dataset.ws) { setPath(ws, el.dataset.ws, readVal(el)); saveWs(); recompute(); render(); return; }
-  if (el.dataset.wz) { setPath(ui.wizard, el.dataset.wz, readVal(el)); ui.wizard.error = ''; render(); return; }
+  if (el.dataset.wz) {
+    // Solo se redibuja si cambia algo visible (la categoría o un aviso): así no se reemplaza el campo al que pasa el foco
+    setPath(ui.wizard, el.dataset.wz, readVal(el)); ui.wizard.error = '';
+    const al = document.querySelector('.wizard .alert'); if (al) al.remove();
+    if (el.tagName === 'SELECT') render(); return;
+  }
   if (el.dataset.rule) { const st = new Set(ws.settings.reglasOff); el.checked ? st.delete(el.dataset.rule) : st.add(el.dataset.rule); ws.settings.reglasOff = [...st]; saveWs(); recompute(); render(); return; }
   if (el.dataset.acc && state) { const k = el.dataset.acc; state.acciones[k] = { ...(state.acciones[k] || { estado: 'Pendiente', responsable: '', fecha: '' }), [el.dataset.f]: s(el.value, 200) }; commit(el.dataset.f === 'estado' && el.value === 'Hecha' ? 'Acción completada' : null); return; }
   if (el.dataset.list && state) {

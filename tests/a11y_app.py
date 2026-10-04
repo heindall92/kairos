@@ -57,7 +57,7 @@ def main():
         for scheme in ["light", "dark"]:
             for w, h in [(1440, 900), (390, 844)]:
                 ctx = b.new_context(viewport={"width": w, "height": h}, color_scheme=scheme, bypass_csp=True, reduced_motion="reduce")
-                page = ctx.new_page()
+                page = ctx.new_page(); page.clock.set_fixed_time("2026-10-02T10:00:00")
                 page.route("**/*", lambda r: r.abort() if r.request.url.startswith("http") else r.continue_())
                 page.goto(APP); page.wait_for_selector("#view h1")
                 page.add_script_tag(path=str(AXE))
