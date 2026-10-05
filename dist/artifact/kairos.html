@@ -598,7 +598,7 @@ input.late { box-shadow: inset 0 0 0 1.5px var(--crit); color: var(--crit); }
 .about-links { display: flex; gap: 8px; flex-wrap: wrap; }
 .suite { display: flex; flex-direction: column; gap: 8px; margin: 6px 0; }
 .suite h3 { font-size: 1rem; }
-.suite-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
+.suite-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
 .suite-card { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: var(--r-lg); background: var(--surface-2); box-shadow: inset 0 0 0 .5px var(--sep); }
 .suite-card.here { box-shadow: inset 0 0 0 1.5px var(--accent-g); }
 .suite-hd { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -1409,7 +1409,7 @@ const EN = {
   'Herramienta de apoyo y preauditoría: no sustituye a la auditoría formal. Los casos de ejemplo son ficticios.': 'A support and pre-audit tool: it does not replace a formal audit. The sample cases are fictitious.',
   'Exportación a Excel con xlsx-js-style 1.2.0 (Apache-2.0). Código bajo licencia GPLv2.': 'Excel export with xlsx-js-style 1.2.0 (Apache-2.0). Code licensed under GPLv2.',
   'Herramientas GRC del autor': 'GRC tools by the author', 'Estás aquí': 'You are here', 'Abrir la app': 'Open the app', 'Código': 'Code',
-  'Se complementan: la SoA de ENS Compliance Studio se importa en Rosetta, y KAIROS cubre op.cont, la continuidad que las otras dos solo enumeran.': 'They work together: the ENS Compliance Studio SoA imports into Rosetta, and KAIROS covers op.cont, the continuity the other two only list.',
+  'Se complementan: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS y KAIROS cubre la continuidad.': 'They work together: ARGOS trains you, Rosetta translates between frameworks, ENS Compliance Studio prepares ENS conformity and KAIROS covers continuity.', 'Laboratorio de práctica GRC: rutas, casos prácticos y simulacros de ENS, ISO/IEC 27001 y continuidad, con puntos y logros.': 'GRC practice lab: ENS, ISO/IEC 27001 and continuity paths, case studies and timed mock exams, with points and badges.',
   'Mapa multinorma: ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en 115 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.': 'Multi-framework map: ENS, ISO/IEC 27001, NIS2 and ISO/IEC 42001 in 115 unified controls, with ENS ↔ ISO equivalences aligned with CCN-STIC 825.',
   'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.': 'System categorisation, MAGERIT risk analysis, Statement of Applicability and ENS pre-audit.',
   'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.': 'Business continuity: BIA, BCP and DRP with the critical recovery path of each function.',
@@ -2275,13 +2275,14 @@ const FAQ = [
 ];
 /* Herramientas GRC del autor: el mismo bloque en Rosetta, ENS Compliance Studio y KAIROS */
 const SUITE = [
+  ['argos', 'ARGOS', 'Laboratorio de práctica GRC: rutas, casos prácticos y simulacros de ENS, ISO/IEC 27001 y continuidad, con puntos y logros.', 'https://heindall92.github.io/argos-grc/', 'https://github.com/heindall92/argos-grc'],
   ['rosetta', 'Rosetta', 'Mapa multinorma: ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en 115 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.', 'https://heindall92.github.io/rosetta_multinorma/', 'https://github.com/heindall92/rosetta_multinorma'],
   ['ens', 'ENS Compliance Studio', 'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.', 'https://heindall92.github.io/grc_ens_compliance_studio/app/dist/ens-compliance-studio.html', 'https://github.com/heindall92/grc_ens_compliance_studio'],
   ['kairos', 'KAIROS', 'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.', 'https://heindall92.github.io/kairos/', 'https://github.com/heindall92/kairos']
 ];
 function suiteGrc() {
   const ext = (h, l, ic) => `<a class="btn sm" href="${h}" target="_blank" rel="noopener noreferrer">${icon(ic, 14)}${l}</a>`;
-  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan: la SoA de ENS Compliance Studio se importa en Rosetta, y KAIROS cubre op.cont, la continuidad que las otras dos solo enumeran.</p>
+  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS y KAIROS cubre la continuidad.</p>
     <div class="suite-grid">${SUITE.map(([id, n, d, app, repo]) => `<article class="suite-card${id === 'kairos' ? ' here' : ''}"><div class="suite-hd"><b>${n}</b>${id === 'kairos' ? '<span class="badge accent">Estás aquí</span>' : ''}</div><p>${d}</p>
       <div class="row">${id === 'kairos' ? ext(repo, 'Código', 'external') : ext(app, 'Abrir la app', 'arrowRight') + ext(repo, 'Código', 'external')}</div></article>`).join('')}</div></section>`;
 }

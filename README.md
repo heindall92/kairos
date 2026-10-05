@@ -359,7 +359,7 @@ kairos/
 
 Distribuido bajo licencia [GPLv2](LICENSE) · © 2026 Yoandy Ramírez Delgado. La exportación a Excel usa [xlsx-js-style](https://github.com/gitbrent/xlsx-js-style) 1.2.0 (Apache-2.0).
 
-Otras herramientas del autor: [Rosetta](https://github.com/heindall92/rosetta_multinorma) (ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en un solo mapa) y [ENS Compliance Studio](https://github.com/heindall92/grc_ens_compliance_studio) (categorización, riesgos MAGERIT y Declaración de Aplicabilidad).
+Otras herramientas del autor: [ARGOS](https://github.com/heindall92/argos-grc) (laboratorio de práctica GRC con rutas, casos prácticos y simulacros), [Rosetta](https://github.com/heindall92/rosetta_multinorma) (ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en un solo mapa) y [ENS Compliance Studio](https://github.com/heindall92/grc_ens_compliance_studio) (categorización, riesgos MAGERIT y Declaración de Aplicabilidad).
 
 ## <img src="docs/assets/icons/user-round.svg" width="20" height="20" valign="middle"/> Autor
 

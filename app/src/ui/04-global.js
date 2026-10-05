@@ -184,13 +184,14 @@ const FAQ = [
 ];
 /* Herramientas GRC del autor: el mismo bloque en Rosetta, ENS Compliance Studio y KAIROS */
 const SUITE = [
+  ['argos', 'ARGOS', 'Laboratorio de práctica GRC: rutas, casos prácticos y simulacros de ENS, ISO/IEC 27001 y continuidad, con puntos y logros.', 'https://heindall92.github.io/argos-grc/', 'https://github.com/heindall92/argos-grc'],
   ['rosetta', 'Rosetta', 'Mapa multinorma: ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en 115 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.', 'https://heindall92.github.io/rosetta_multinorma/', 'https://github.com/heindall92/rosetta_multinorma'],
   ['ens', 'ENS Compliance Studio', 'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.', 'https://heindall92.github.io/grc_ens_compliance_studio/app/dist/ens-compliance-studio.html', 'https://github.com/heindall92/grc_ens_compliance_studio'],
   ['kairos', 'KAIROS', 'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.', 'https://heindall92.github.io/kairos/', 'https://github.com/heindall92/kairos']
 ];
 function suiteGrc() {
   const ext = (h, l, ic) => `<a class="btn sm" href="${h}" target="_blank" rel="noopener noreferrer">${icon(ic, 14)}${l}</a>`;
-  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan: la SoA de ENS Compliance Studio se importa en Rosetta, y KAIROS cubre op.cont, la continuidad que las otras dos solo enumeran.</p>
+  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS y KAIROS cubre la continuidad.</p>
     <div class="suite-grid">${SUITE.map(([id, n, d, app, repo]) => `<article class="suite-card${id === 'kairos' ? ' here' : ''}"><div class="suite-hd"><b>${n}</b>${id === 'kairos' ? '<span class="badge accent">Estás aquí</span>' : ''}</div><p>${d}</p>
       <div class="row">${id === 'kairos' ? ext(repo, 'Código', 'external') : ext(app, 'Abrir la app', 'arrowRight') + ext(repo, 'Código', 'external')}</div></article>`).join('')}</div></section>`;
 }
