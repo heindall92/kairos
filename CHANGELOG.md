@@ -7,7 +7,7 @@
 - **Importar la exposición:** el sobre `activos` de CTEM-Nexus trae por activo los hallazgos abiertos, críticos y explotados (KEV), las rutas de ataque, el peor hallazgo y el riesgo de interrupción. Se valida y se sanea; un sobre de otra herramienta se rechaza. «Importar un proyecto» también lo reconoce y no sustituye el proyecto abierto.
 - **Recuperación:** los activos expuestos llevan la etiqueta «Exposición alta» o «media» y su ficha enseña el detalle técnico.
 - **Regla CTM-01** (NC menor, ISO 22301 § 8.2.3 · ENS op.cont.1 · op.exp.4): activo de una función crítica con riesgo de interrupción alto. Ya son 29 reglas.
-- **Herramientas GRC del autor:** el bloque de Acerca de pasa a siete herramientas (se suman CTEM-Nexus, ENS AD Auditor y Norvik) y explica que comparten formato de intercambio.
+- **Herramientas GRC del autor:** el bloque de Acerca de pasa a siete herramientas (se suman CTEM-Nexus, ENS AD Auditor, con su panel en GitHub Pages, y Norvik) y explica que comparten formato de intercambio.
 - **Pruebas:** 3 del motor (18) y 13 de extremo a extremo (102). axe sigue con 0 infracciones, ahora también con la exposición importada.
 
 ## 1.0.1 · octubre de 2026

@@ -190,7 +190,7 @@ const SUITE = [
   ['ens', 'ENS Compliance Studio', 'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.', 'https://heindall92.github.io/grc_ens_compliance_studio/app/dist/ens-compliance-studio.html', 'https://github.com/heindall92/grc_ens_compliance_studio'],
   ['kairos', 'KAIROS', 'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.', 'https://heindall92.github.io/kairos/', 'https://github.com/heindall92/kairos'],
   ['ctem', 'CTEM-Nexus', 'Gestión de la exposición: prioriza hallazgos de escáneres y pentest y dibuja las rutas de ataque hacia los activos críticos.', 'https://heindall92.github.io/ctem-nexus/', 'https://github.com/heindall92/ctem-nexus'],
-  ['adaudit', 'ENS AD Auditor', 'Audita el Directorio Activo frente a las medidas de control de acceso del ENS (op.acc).', null, 'https://github.com/heindall92/ens_ad-auditor'],
+  ['adaudit', 'ENS AD Auditor', 'Audita el Directorio Activo frente a las medidas de control de acceso del ENS (op.acc).', 'https://heindall92.github.io/ens_ad-auditor/', 'https://github.com/heindall92/ens_ad-auditor'],
   ['norvik', 'Norvik', 'Gobernanza de escritorio: roles, responsables y políticas que unen al resto de herramientas.', null, 'https://github.com/heindall92/Norvik_Gobernanza']
 ];
 function suiteGrc() {
