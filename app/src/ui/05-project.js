@@ -230,12 +230,24 @@ function gantt() {
     <div class="legend"><span><i class="lg s-mayor"></i>Listo a tiempo</span><span><i class="lg s-over"></i>Listo después de lo que exigen sus funciones</span><span><i class="lg mk mk-rto"></i>RTO más exigente de las funciones que lo usan</span></div>`;
 }
 function addActivo() { const id = nextId('A-', state.activos); state.activos.push({ id, nombre: 'Nuevo activo', tipo: 'Servidor', datos: false, estrategia: 'ninguna', tiempoRecuperacion: null, dependeDe: [], ubicacion: '', responsable: '', procedimiento: { pasos: '', exito: '', credenciales: '' }, backup: { aplica: false } }); ui.aOpen = id; commit('Activo añadido'); }
+/* Exposición técnica que CTEM-Nexus atribuye a un activo (sobre «activos» importado en Exportar → Ecosistema) */
+const ctemDe = (id) => (state.ctem && state.ctem.activos[id]) || null;
+const RIESGO_TXT = { alto: 'Riesgo de interrupción alto', medio: 'Riesgo de interrupción medio', bajo: 'Riesgo de interrupción bajo' };
+function ctemBloque(cx) {
+  const kv = (k, v) => `<span class="rh-kv"><small>${k}</small><b class="num">${v}</b></span>`;
+  return `<div class="ctem-blk ${cx.riesgoInterrupcion}" role="group" aria-label="Exposición técnica según CTEM-Nexus">
+    <div class="ctem-hd">${icon('radar', 16)}<b>${RIESGO_TXT[cx.riesgoInterrupcion]}</b><span class="muted small">CTEM-Nexus · ${esc(state.ctem.generado ? state.ctem.generado.slice(0, 10) : '')}</span></div>
+    <div class="ctem-kv">${kv('Abiertos', cx.abiertos)}${kv('Críticos', cx.criticos)}${kv('Altos', cx.altos)}${kv('Explotados (KEV)', cx.kev)}${kv('Rutas de ataque', cx.rutasDeAtaque)}${kv('Puntuación máx.', Math.round(cx.puntuacionMaxima))}</div>
+    ${cx.peorHallazgo ? `<p class="small">Peor hallazgo: <b>${esc(cx.peorHallazgo)}</b></p>` : ''}
+    <p class="muted small">${cx.riesgoInterrupcion === 'alto' ? 'Un ciberataque es hoy el escenario de interrupción más probable para este activo: ensáyalo en una prueba y coordina la corrección con seguridad.' : cx.riesgoInterrupcion === 'medio' ? 'Hay hallazgos abiertos sin camino directo desde Internet: vigila que no bloqueen la recuperación.' : 'Sin hallazgos abiertos en el último análisis.'}</p></div>`;
+}
 function vRecuperacion() {
   const cards = calc.ordenRecuperacion.map((r) => {
     const i = aIdx(r.id); const a = state.activos[i]; const open = ui.aOpen === r.id; const late = r.rtoObjetivo !== null && r.fin > r.rtoObjetivo + 1e-9;
+    const cx = ctemDe(r.id);
     const head = `<button type="button" class="row-head" data-act="a-toggle" data-id="${esc(r.id)}" aria-expanded="${open}" aria-controls="ad-${esc(r.id)}">
       <span class="ord num">${r.orden}</span><code>${esc(r.id)}</code><span class="rh-name"><b>${esc(a.nombre)}</b><small>${esc(a.tipo)}${a.datos ? ' · guarda datos' : ''}</small></span>
-      <span class="badge ${a.estrategia === 'ninguna' ? 'crit' : 'neutral'}">${E.ESTRATEGIAS[a.estrategia].label}</span>
+      <span class="badge ${a.estrategia === 'ninguna' ? 'crit' : 'neutral'}">${E.ESTRATEGIAS[a.estrategia].label}</span>${cx && cx.riesgoInterrupcion !== 'bajo' ? `<span class="badge ${cx.riesgoInterrupcion === 'alto' ? 'crit' : 'warn'}">${icon('radar', 13)}${cx.riesgoInterrupcion === 'alto' ? 'Exposición alta' : 'Exposición media'}</span>` : ''}
       <span class="rh-kv"><small>Tarda</small><b>${fmtH(r.tiempo)}</b></span><span class="rh-kv"><small>Listo</small><b class="${late ? 'crit-t' : ''}">${fmtH(r.fin)}</b></span>${icon('chevronDown', 18, 'chev')}</button>`;
     if (!open) return `<article class="row-card">${head}</article>`;
     const p = `activos.${i}`;
@@ -250,6 +262,7 @@ function vRecuperacion() {
         <div class="fld span4">${inChk(`${p}.datos`, a.datos, 'Guarda datos de las funciones (determina el RPO)')}</div>
       </div>
       <p class="muted small">${esc(E.ESTRATEGIAS[a.estrategia].desc)}. Lo necesitan ${r.funciones.length ? r.funciones.join(', ') : 'ninguna función'}${r.rtoObjetivo !== null ? `; la más exigente pide ${fmtH(r.rtoObjetivo)}` : ''}.</p>
+      ${cx ? ctemBloque(cx) : ''}
       <div class="grid g2"><div><h4>Procedimiento</h4>
         ${fld('Pasos de recuperación', inArea(`${p}.procedimiento.pasos`, a.procedimiento.pasos, 'rows="6" placeholder="Pasos ejecutables por un técnico sin conocimiento previo del entorno"'))}
         ${fld('Criterio de éxito', inArea(`${p}.procedimiento.exito`, a.procedimiento.exito, 'placeholder="Cómo se verifica que funciona"'))}
@@ -426,5 +439,21 @@ function vExportar() {
     ${card('listChecks', 'Plan de acción', 'Una fila por incidencia con estado, responsable y fecha límite.', 'export-acciones', 'CSV')}
     ${card('download', 'Proyecto', 'El proyecto completo para guardarlo o abrirlo en otro equipo con KAIROS.', 'export-json', 'JSON')}
     ${card('upload', 'Importar un proyecto', 'Abre un proyecto exportado desde KAIROS. Se valida antes de usarse.', 'import-json', 'JSON')}
-  </div>`;
+  </div>
+  ${ecosistema(card)}`;
+}
+/* Ecosistema: el BIA viaja a CTEM-Nexus y vuelve la exposición técnica de cada activo (sobre «yrd-ecosistema») */
+function ecosistema(card) {
+  const cx = state.ctem; const ids = new Set(state.activos.map((a) => a.id));
+  const filas = cx ? Object.values(cx.activos).sort((a, b) => ({ alto: 0, medio: 1, bajo: 2 }[a.riesgoInterrupcion] - { alto: 0, medio: 1, bajo: 2 }[b.riesgoInterrupcion]) || b.puntuacionMaxima - a.puntuacionMaxima) : [];
+  const sinPareja = filas.filter((x) => !ids.has(x.activo)).length;
+  const tabla = cx ? `<div class="table-wrap" tabindex="0" role="region" aria-label="Exposición por activo según CTEM-Nexus"><table class="tbl"><thead><tr><th>Activo</th><th>Riesgo de interrupción</th><th class="c">Abiertos</th><th class="c">Críticos</th><th class="c">KEV</th><th class="c">Rutas</th><th>Peor hallazgo</th></tr></thead><tbody>
+    ${filas.map((x) => `<tr><td><code>${esc(x.activo)}</code> ${esc(ids.has(x.activo) ? state.activos.find((a) => a.id === x.activo).nombre : x.nombre)}${ids.has(x.activo) ? '' : ' <span class="badge neutral">Sin pareja en KAIROS</span>'}</td><td><span class="badge ${{ alto: 'crit', medio: 'warn', bajo: 'ok' }[x.riesgoInterrupcion]}">${RIESGO_TXT[x.riesgoInterrupcion]}</span></td><td class="c num">${x.abiertos}</td><td class="c num">${x.criticos}</td><td class="c num">${x.kev}</td><td class="c num">${x.rutasDeAtaque}</td><td class="small">${esc(x.peorHallazgo || '—')}</td></tr>`).join('')}</tbody></table></div>
+    <div class="row spread"><p class="muted small"><span class="no-tr">${esc(cx.proyecto || 'CTEM-Nexus')} · ${esc(cx.generado.slice(0, 10))}</span>${sinPareja ? ` · <span>${sinPareja === 1 ? '1 activo sin pareja' : `${sinPareja} activos sin pareja`}</span>: <span>en CTEM-Nexus, etiqueta el activo con kairos:ID</span>` : ''}</p><button type="button" class="btn sm danger" data-act="clear-ctem">${icon('trash', 15)}Quitar la exposición importada</button></div>` : '';
+  return `<section class="card eco" aria-labelledby="eco-h"><div class="card-head"><h2 id="eco-h">${icon('blocks', 18)}Ecosistema · CTEM-Nexus</h2><span class="muted small">Sobre común «yrd-ecosistema»</span></div>
+    <p class="muted small">El BIA fija en CTEM-Nexus la criticidad de cada activo; CTEM-Nexus devuelve su exposición técnica y la preauditoría avisa (CTM-01) si un activo de una función crítica tiene un riesgo de interrupción alto.</p>
+    <div class="export-grid">
+      ${card('blocks', 'BIA para CTEM-Nexus', 'Cada activo con las funciones que lo usan, su RTO, RPO, MTPD y coste por hora. Se importa en CTEM-Nexus → Ecosistema.', 'export-bia', 'JSON')}
+      ${card('radar', 'Importar exposición de CTEM-Nexus', 'El sobre «activos» de CTEM-Nexus: hallazgos abiertos, explotados y rutas de ataque por activo. Se valida antes de usarse.', 'import-ctem', 'JSON')}
+    </div>${tabla}</section>`;
 }

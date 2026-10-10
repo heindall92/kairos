@@ -68,6 +68,9 @@ function sanitizeState(raw) {
   st.acciones = {};
   for (const [k, a] of safeEntries(r.acciones, 2000)) if (isObj(a) && k.length <= 200) st.acciones[k] = { estado: oneOf(a.estado, ['Pendiente', 'En curso', 'Hecha'], 'Pendiente'), responsable: s(a.responsable, 200), fecha: dateOk(a.fecha) };
   st.historial = arr(r.historial, 60).filter((h) => isObj(h) && dateOk(h.fecha)).map((h) => ({ fecha: h.fecha, preparacion: num(h.preparacion, 0, 1, 0), ncMayor: Math.round(num(h.ncMayor, 0, 9999, 0)), ncMenor: Math.round(num(h.ncMenor, 0, 9999, 0)), exposicion: num(h.exposicion, 0, 1e12, 0) }));
+  // Exposición técnica importada de CTEM-Nexus (sobre «yrd-ecosistema»): se vuelve a sanear en cada carga
+  const ctem = isObj(r.ctem) ? E.desdeCtem(r.ctem) : null;
+  if (ctem && Object.keys(ctem.activos).length) st.ctem = ctem;
   return st;
 }
 const PROJ_ID = /^(p-[a-z0-9]{4,20}|demo-[a-z]{2,20})$/;

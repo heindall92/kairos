@@ -1,6 +1,6 @@
 {
   "name": "kairos",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "description": "Continuidad de negocio: BIA, BCP y DRP con ruta crítica de recuperación, en un único fichero HTML autocontenido.",
   "license": "GPL-2.0-only",

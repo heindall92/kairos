@@ -1,0 +1,91 @@
+{
+  "format": "yrd-ecosistema",
+  "version": 1,
+  "origen": {
+    "herramienta": "ctem-nexus",
+    "version": "ejemplo",
+    "generado": "2026-09-16T09:00:00Z"
+  },
+  "tipo": "activos",
+  "proyecto": "Ejemplo · Industrias Meridiano S.A.",
+  "datos": [
+    {
+      "activo": "A-01",
+      "nombre": "Portal web de clientes",
+      "criticidad": 5,
+      "abiertos": 1,
+      "criticos": 1,
+      "altos": 0,
+      "kev": 1,
+      "rutasDeAtaque": 3,
+      "puntuacionMaxima": 100,
+      "peorHallazgo": "H-001 · Log4Shell en Apache Log4j 2",
+      "riesgoInterrupcion": "alto"
+    },
+    {
+      "activo": "A-02",
+      "nombre": "Exchange OWA",
+      "criticidad": 4,
+      "abiertos": 2,
+      "criticos": 2,
+      "altos": 0,
+      "kev": 2,
+      "rutasDeAtaque": 1,
+      "puntuacionMaxima": 90.7,
+      "peorHallazgo": "H-002 · ProxyShell en Microsoft Exchange",
+      "riesgoInterrupcion": "alto"
+    },
+    {
+      "activo": "A-03",
+      "nombre": "Citrix NetScaler Gateway",
+      "criticidad": 4,
+      "abiertos": 2,
+      "criticos": 2,
+      "altos": 0,
+      "kev": 2,
+      "rutasDeAtaque": 5,
+      "puntuacionMaxima": 86.9,
+      "peorHallazgo": "H-004 · RCE sin autenticar en NetScaler Gateway",
+      "riesgoInterrupcion": "alto"
+    },
+    {
+      "activo": "A-04",
+      "nombre": "Servidor de aplicaciones APP01",
+      "criticidad": 5,
+      "abiertos": 3,
+      "criticos": 1,
+      "altos": 2,
+      "kev": 1,
+      "rutasDeAtaque": 4,
+      "puntuacionMaxima": 89.4,
+      "peorHallazgo": "H-014 · Apache ActiveMQ: deserialización OpenWire",
+      "riesgoInterrupcion": "alto"
+    },
+    {
+      "activo": "A-06",
+      "nombre": "Controlador de dominio DC01",
+      "criticidad": 5,
+      "abiertos": 3,
+      "criticos": 0,
+      "altos": 3,
+      "kev": 0,
+      "rutasDeAtaque": 0,
+      "puntuacionMaxima": 74.3,
+      "peorHallazgo": "H-005 · Cuenta de servicio svc_sql con SPN «kerberoastable»",
+      "riesgoInterrupcion": "medio"
+    },
+    {
+      "activo": "A-05",
+      "nombre": "ERP y base de datos financiera",
+      "criticidad": 5,
+      "abiertos": 1,
+      "criticos": 0,
+      "altos": 1,
+      "kev": 0,
+      "rutasDeAtaque": 0,
+      "puntuacionMaxima": 76.4,
+      "peorHallazgo": "H-010 · SQL Server con cuenta «sa» y contraseña débil",
+      "riesgoInterrupcion": "medio"
+    }
+  ]
+}

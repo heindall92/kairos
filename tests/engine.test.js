@@ -177,3 +177,50 @@ test('todas las reglas citan su referencia y no hay identificadores repetidos', 
   for (const [id, titulo, ref] of E.REGLAS) { assert.ok(!seen.has(id)); seen.add(id); assert.ok(titulo.length > 10 && /ISO|ENS|CCN/.test(ref), id); }
   for (const c of CASOS) for (const ch of E.calcular(proyectoDeCaso(c), { hoy: HOY }).checks) assert.ok(seen.has(ch.id) && E.SEV.includes(ch.sev));
 });
+
+/* Ecosistema: sobre «yrd-ecosistema» con CTEM-Nexus */
+const SOBRE_CTEM = require('./fixtures/ctem-a-kairos.json');
+
+test('ecosistema: el BIA viaja como sobre «bia» con las funciones de cada activo', () => {
+  const st = caso('techserv'); const r = E.calcular(st, { hoy: HOY });
+  const s = E.aSobreBia(st, r, '1.1.0', new Date('2026-10-10T08:00:00.123Z'));
+  assert.equal(s.format, 'yrd-ecosistema'); assert.equal(s.version, 1); assert.equal(s.tipo, 'bia');
+  assert.deepEqual(s.origen, { herramienta: 'kairos', version: '1.1.0', generado: '2026-10-10T08:00:00Z' });
+  assert.equal(s.datos.length, st.activos.length);
+  const gd = s.datos.find((d) => d.activo === 'A-07');
+  assert.equal(gd.nombre, 'Gestor documental');
+  assert.ok(gd.funciones.some((f) => f.id === 'F-03' && f.rto === 4 && f.criticidad === 'ALTA'), 'expedientes usa el gestor documental');
+  for (const d of s.datos) for (const f of d.funciones) assert.ok(['id', 'nombre', 'rto', 'rpo', 'mtpd', 'costeHora', 'criticidad'].every((k) => k in f));
+  assert.doesNotThrow(() => JSON.parse(JSON.stringify(s)));
+});
+
+test('ecosistema: el sobre «activos» de CTEM-Nexus se sanea y lo ajeno se rechaza', () => {
+  const cx = E.desdeCtem(SOBRE_CTEM);
+  assert.equal(cx.generado, SOBRE_CTEM.origen.generado);
+  assert.equal(Object.keys(cx.activos).length, SOBRE_CTEM.datos.length);
+  assert.equal(cx.activos['A-01'].riesgoInterrupcion, 'alto');
+  assert.deepEqual(E.desdeCtem(cx), cx, 'el estado guardado se vuelve a sanear sin cambios');
+  assert.equal(E.desdeCtem({ ...SOBRE_CTEM, tipo: 'hallazgos' }), null);
+  assert.equal(E.desdeCtem({ ...SOBRE_CTEM, origen: { ...SOBRE_CTEM.origen, herramienta: 'otra' } }), null);
+  assert.equal(E.desdeCtem({ ...SOBRE_CTEM, version: 2 }), null);
+  assert.equal(E.desdeCtem('x'), null);
+  const raro = E.desdeCtem({ ...SOBRE_CTEM, datos: [{ activo: '<img src=x>', abiertos: 3 }, { activo: 'A-09', abiertos: -4, criticos: 1e12, kev: 'x', puntuacionMaxima: 900, riesgoInterrupcion: 'catastrófico', nombre: 'a\u0000b' }] });
+  assert.deepEqual(Object.keys(raro.activos), ['A-09'], 'los identificadores que no lo son se descartan');
+  assert.deepEqual(raro.activos['A-09'], { activo: 'A-09', nombre: 'a b', criticidad: 0, abiertos: 0, criticos: 1e6, altos: 0, kev: 0, rutasDeAtaque: 0, puntuacionMaxima: 100, peorHallazgo: '', riesgoInterrupcion: 'bajo' });
+});
+
+test('ecosistema: CTM-01 avisa si un activo de una función crítica tiene riesgo de interrupción alto', () => {
+  const st = caso('techserv');
+  const sin = E.calcular(st, { hoy: HOY });
+  assert.ok(!sin.checks.some((c) => c.id === 'CTM-01'), 'sin exposición importada no hay aviso');
+  st.ctem = E.desdeCtem(SOBRE_CTEM);
+  const r = E.calcular(st, { hoy: HOY });
+  const ctm = r.checks.filter((c) => c.id === 'CTM-01');
+  const criticos = new Set(r.activos.filter((x) => x.critico).map((x) => x.a.id));
+  const altos = Object.values(st.ctem.activos).filter((x) => x.riesgoInterrupcion === 'alto').map((x) => x.activo);
+  const esperados = altos.filter((id) => criticos.has(id)).sort();
+  assert.ok(esperados.length > 0, 'el ejemplo cruza al menos un activo crítico');
+  assert.deepEqual(ctm.map((c) => c.ambito.split(' ')[0]).sort(), esperados);
+  for (const c of ctm) { assert.equal(c.sev, 'NC menor'); assert.match(c.detalle, /CTEM-Nexus ve \d+ hallazgos? abiertos?/); }
+  assert.equal(r.kpi.ncMenor, sin.kpi.ncMenor + ctm.length);
+});

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z+lSeMniblnkC7MlgH49SDsRYTW++ImAmgMUtwfdlq0=' 'sha256-GLSUKRsmChD6mYKaq8vJfcv47bmy9Ac84Pye0tD1bVU=' 'sha256-F96FdFfYlaR2vpvE+OHdUJ1BBY6tCXoOHDS9rx2BY2k=' 'sha256-HHq/KZP/LNYeUI+SaOms2gCYyXlvOSXSug0leQcmU+I='; style-src 'sha256-KnryAJeBiJy+BjbK70Vyf+J4TuaywzKM1s9qzFlkMB8='; style-src-attr 'unsafe-inline'; font-src 'none'; img-src data: blob:; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z+lSeMniblnkC7MlgH49SDsRYTW++ImAmgMUtwfdlq0=' 'sha256-9xcBQnyBjCJ1FITYYqMDfa13M51aVa+AaPk2c3c+Y6E=' 'sha256-cfRqhuK1t+8h2Ekv79uVe+zRO+XBEF9+sA+3injK4tk=' 'sha256-HHq/KZP/LNYeUI+SaOms2gCYyXlvOSXSug0leQcmU+I='; style-src 'sha256-9cjbK6gHRIWY+ejlm/FBl760FEL7NjWRmfOIC+Kc8IQ='; style-src-attr 'unsafe-inline'; font-src 'none'; img-src data: blob:; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
@@ -722,6 +722,20 @@ input.late { box-shadow: inset 0 0 0 1.5px var(--crit); color: var(--crit); }
   .card, .row-list, .metric, .table-wrap { box-shadow: none; border: 1px solid #ddd; }
 }
 
+/* Ecosistema · CTEM-Nexus */
+.eco { margin-top: var(--gap); display: flex; flex-direction: column; gap: 14px; }
+.eco .card-head { margin-bottom: 0; }
+.eco .card-head h2 { display: flex; align-items: center; gap: 8px; }
+.eco .export-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ctem-blk { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; margin: 4px 0 14px; border-radius: var(--r); background: var(--surface-2); box-shadow: inset 3px 0 0 var(--ok); }
+.ctem-blk.medio { box-shadow: inset 3px 0 0 var(--warn); } .ctem-blk.alto { box-shadow: inset 3px 0 0 var(--crit); background: var(--crit-soft); }
+.ctem-blk.alto .muted { color: var(--ink-2); }
+.ctem-hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ctem-kv { display: flex; gap: 6px 18px; flex-wrap: wrap; }
+.ctem-kv .rh-kv { align-items: flex-start; min-width: 0; }
+.row-head .badge svg { margin-right: 3px; vertical-align: -2px; }
+@media (max-width: 680px) { .eco .export-grid { grid-template-columns: 1fr; } }
+
 </style>
 </head>
 <body>
@@ -974,7 +988,8 @@ window.KAIROS_DATA = {"casos":[{"id":"techserv","icono":"server","sector":"Prove
     ['TST-03', 'Prueba fallida o parcial sin acción correctiva', 'ISO 22301 § 10.1'],
     ['TST-04', 'Última prueba hace más de un año', 'ENS op.cont.3 · ISO 22301 § 8.5'],
     ['REV-01', 'Revisión del BIA vencida o sin fecha', 'ISO 22301 § 9.1 · ENS op.cont.1'],
-    ['REV-02', 'Plan sin aprobación de la dirección', 'ISO 22301 § 5.1 · § 5.2']
+    ['REV-02', 'Plan sin aprobación de la dirección', 'ISO 22301 § 5.1 · § 5.2'],
+    ['CTM-01', 'Activo de una función crítica con riesgo de interrupción alto por exposición técnica (CTEM-Nexus)', 'ISO 22301 § 8.2.3 · ENS op.cont.1 · op.exp.4']
   ];
   const REGLA = Object.fromEntries(REGLAS.map(([id, titulo, ref]) => [id, { titulo, ref }]));
 
@@ -1039,6 +1054,14 @@ window.KAIROS_DATA = {"casos":[{"id":"techserv","icono":"server","sector":"Prove
       }
     }
 
+    // Exposición técnica importada de CTEM-Nexus: un ciberataque es el escenario de interrupción más probable
+    const ctem = (st.ctem && st.ctem.activos) || {};
+    for (const x of c.ax) {
+      const e = ctem[x.a.id];
+      if (!e || !x.critico || e.riesgoInterrupcion !== 'alto') continue;
+      add('CTM-01', 'NC menor', `${x.a.id} · ${x.a.nombre}`, `Sostiene ${x.funciones.join(', ')}. CTEM-Nexus ve ${e.abiertos} hallazgo${e.abiertos === 1 ? '' : 's'} abierto${e.abiertos === 1 ? '' : 's'} (${e.criticos} crítico${e.criticos === 1 ? '' : 's'}, ${e.kev} explotado${e.kev === 1 ? '' : 's'} activamente) y ${e.rutasDeAtaque} ruta${e.rutasDeAtaque === 1 ? '' : 's'} de ataque${e.peorHallazgo ? `; el peor: ${e.peorHallazgo}` : ''}.`, 'Coordinar con seguridad la corrección de esos hallazgos y ensayar en el BCP el escenario de ciberataque sobre este activo.');
+    }
+
     const bcp = st.bcp || {};
     for (const r of bcp.equipo || []) if (!isBlank(r.titular) && isBlank(r.suplente)) add('BCP-01', exigeContinuidad ? 'NC menor' : 'Observación', r.rol || 'Equipo de crisis', `${r.titular} no tiene suplente: si no está disponible, el plan se detiene.`, 'Designar un suplente con la misma autoridad y formación.');
     if ((bcp.equipo || []).length === 0 || (bcp.equipo || []).every((r) => isBlank(r.titular))) add('BCP-01', exigeContinuidad ? 'NC mayor' : 'NC menor', 'Equipo de crisis', 'No hay equipo de crisis designado.', 'Designar al menos responsable de crisis, de recuperación técnica y de comunicación, con suplentes.');
@@ -1098,7 +1121,38 @@ window.KAIROS_DATA = {"casos":[{"id":"techserv","icono":"server","sector":"Prove
     return { preparacion: r.kpi.preparacion, ncMayor: r.kpi.ncMayor, ncMenor: r.kpi.ncMenor, exposicion: Math.round(r.kpi.exposicion) };
   }
 
-  return { HORIZONTES, DIMENSIONES, NIVELES, CATEGORIAS, ESTRATEGIAS, TIPOS_ACTIVO, TIPOS_PRUEBA, RESULTADOS, SEV, REGLAS,
+  /* ---------- Ecosistema: sobre «yrd-ecosistema» con CTEM-Nexus ---------- */
+  const ECO = 'yrd-ecosistema';
+  const isO = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+  const tx = (v, n) => (typeof v === 'string' ? v : typeof v === 'number' && isFinite(v) ? String(v) : '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, n || 200);
+  const ent = (v, max) => { const x = typeof v === 'number' && isFinite(v) ? Math.round(v) : 0; return Math.max(0, Math.min(max || 1e6, x)); };
+  /** BIA como sobre «bia»: cada activo con las funciones que lo usan y sus objetivos (CTEM-Nexus calcula la criticidad). */
+  function aSobreBia(st, c, version, ahora) {
+    const datos = c.activos.map((x) => ({
+      activo: x.a.id, nombre: x.a.nombre, tipo: x.a.tipo, responsable: tx(x.a.responsable, 120), dependeDe: [...(x.a.dependeDe || [])],
+      funciones: x.funciones.map((id) => { const f = c.fxById.get(id); return { id, nombre: f ? f.nombre : id, rto: f ? f.rto : null, rpo: f ? f.rpo : null, mtpd: f ? f.mtpd : null, costeHora: f ? f.costeHora : 0, criticidad: f ? f.criticidad : null }; })
+    }));
+    const m = st.meta || {};
+    return { format: ECO, version: 1, origen: { herramienta: 'kairos', version: String(version || ''), generado: (ahora || new Date()).toISOString().replace(/\.\d{3}Z$/, 'Z') }, tipo: 'bia', proyecto: tx(m.organizacion || m.nombre, 120), datos };
+  }
+  /** Riesgo de interrupción que exporta CTEM-Nexus (sobre «activos»), saneado. Devuelve null si no lo es. */
+  function desdeCtem(o) {
+    if (!isO(o)) return null;
+    const sobre = o.format === ECO;
+    if (sobre && (o.version !== 1 || !isO(o.origen) || o.origen.herramienta !== 'ctem-nexus' || o.tipo !== 'activos' || !Array.isArray(o.datos))) return null;
+    const lista = sobre ? o.datos : isO(o.activos) ? Object.values(o.activos) : null;
+    if (!lista) return null;
+    const activos = {};
+    for (const d of lista.slice(0, 2000)) {
+      if (!isO(d) || !/^[\w.-]{1,40}$/.test(tx(d.activo, 40))) continue;
+      activos[tx(d.activo, 40)] = { activo: tx(d.activo, 40), nombre: tx(d.nombre, 160), criticidad: ent(d.criticidad, 5), abiertos: ent(d.abiertos), criticos: ent(d.criticos), altos: ent(d.altos), kev: ent(d.kev),
+        rutasDeAtaque: ent(d.rutasDeAtaque), puntuacionMaxima: Math.max(0, Math.min(100, Number(d.puntuacionMaxima) || 0)), peorHallazgo: tx(d.peorHallazgo, 200),
+        riesgoInterrupcion: ['alto', 'medio', 'bajo'].includes(d.riesgoInterrupcion) ? d.riesgoInterrupcion : 'bajo' };
+    }
+    return { generado: tx(sobre ? o.origen.generado : o.generado, 40), proyecto: tx(o.proyecto, 120), activos };
+  }
+
+  return { aSobreBia, desdeCtem, HORIZONTES, DIMENSIONES, NIVELES, CATEGORIAS, ESTRATEGIAS, TIPOS_ACTIVO, TIPOS_PRUEBA, RESULTADOS, SEV, REGLAS,
     num, isBlank, fmtH, diasEntre, curvaImpacto, mtpdMatriz, criticidad, tiempoActivo, recuperacionActivos, calcular, auditar, estadoEns, instantanea };
 });
 
@@ -1406,7 +1460,7 @@ const EN = {
   'Ir al panel': 'Go to the dashboard', 'Ir a funciones': 'Go to functions', 'Ir a dependencias': 'Go to dependencies', 'Ir a recuperación': 'Go to recovery',
   'Ir a pruebas': 'Go to tests', 'Ir a la preauditoría': 'Go to the pre-audit', 'luego': 'then', 'y': 'and',
   '¿En qué se diferencia de la plantilla de BIA y BCP?': 'How is it different from the BIA and BCP template?',
-  'La plantilla recoge los datos; KAIROS además calcula. Recorre las dependencias para saber cuándo vuelve cada función, compara el RPO con la frecuencia real de las copias, comprueba que el plan se activa antes de que venza el RTO y que el sitio alternativo llega a tiempo, y revisa todo con 28 reglas.': 'The template collects the data; KAIROS also calculates. It follows the dependencies to know when each function is back, compares the RPO with the real backup frequency, checks that the plan activates before the RTO expires and that the alternate site arrives on time, and reviews everything with 28 rules.',
+  'La plantilla recoge los datos; KAIROS además calcula. Recorre las dependencias para saber cuándo vuelve cada función, compara el RPO con la frecuencia real de las copias, comprueba que el plan se activa antes de que venza el RTO y que el sitio alternativo llega a tiempo, y revisa todo con 29 reglas.': 'The template collects the data; KAIROS also calculates. It follows the dependencies to know when each function is back, compares the RPO with the real backup frequency, checks that the plan activates before the RTO expires and that the alternate site arrives on time, and reviews everything with 29 rules.',
   '¿Por qué no se exige que el RPO sea menor que el RTO?': 'Why isn’t the RPO required to be below the RTO?',
   'Porque miden cosas distintas: el RTO es tiempo sin servicio y el RPO, datos perdidos. Una función puede tolerar 24 h de parada y ninguna pérdida de datos (RPO 0, RTO 24 h). Lo que sí se exige es RTO menor que MTPD.': 'Because they measure different things: the RTO is downtime and the RPO is lost data. A function can tolerate 24 h of downtime and no data loss (RPO 0, RTO 24 h). What is required is an RTO below the MTPD.',
   '¿Cómo se calcula el RTO alcanzable?': 'How is the achievable RTO calculated?',
@@ -1423,11 +1477,33 @@ const EN = {
   'Normativa de referencia: ISO 22301:2019, ISO/IEC 27001:2022 (A.5.29, A.5.30, A.8.13), Real Decreto 311/2022 (op.cont.1 a op.cont.4, mp.info.6), CCN-STIC 817.': 'Reference standards: ISO 22301:2019, ISO/IEC 27001:2022 (A.5.29, A.5.30, A.8.13), Royal Decree 311/2022 (op.cont.1 to op.cont.4, mp.info.6), CCN-STIC 817.',
   'Herramienta de apoyo y preauditoría: no sustituye a la auditoría formal. Los casos de ejemplo son ficticios.': 'A support and pre-audit tool: it does not replace a formal audit. The sample cases are fictitious.',
   'Exportación a Excel con xlsx-js-style 1.2.0 (Apache-2.0). Código bajo licencia GPLv2.': 'Excel export with xlsx-js-style 1.2.0 (Apache-2.0). Code licensed under GPLv2.',
+  // Ecosistema · CTEM-Nexus
+  'Ecosistema · CTEM-Nexus': 'Ecosystem · CTEM-Nexus', 'Sobre común «yrd-ecosistema»': 'Shared “yrd-ecosistema” envelope',
+  'El BIA fija en CTEM-Nexus la criticidad de cada activo; CTEM-Nexus devuelve su exposición técnica y la preauditoría avisa (CTM-01) si un activo de una función crítica tiene un riesgo de interrupción alto.': 'The BIA sets each asset’s criticality in CTEM-Nexus; CTEM-Nexus returns its technical exposure and the pre-audit warns (CTM-01) when an asset of a critical function has a high disruption risk.',
+  'BIA para CTEM-Nexus': 'BIA for CTEM-Nexus', 'Cada activo con las funciones que lo usan, su RTO, RPO, MTPD y coste por hora. Se importa en CTEM-Nexus → Ecosistema.': 'Each asset with the functions that use it, their RTO, RPO, MTPD and cost per hour. Import it in CTEM-Nexus → Ecosystem.',
+  'Importar exposición de CTEM-Nexus': 'Import exposure from CTEM-Nexus', 'El sobre «activos» de CTEM-Nexus: hallazgos abiertos, explotados y rutas de ataque por activo. Se valida antes de usarse.': 'The CTEM-Nexus “activos” envelope: open findings, exploited ones and attack paths per asset. It is validated before use.',
+  'Exposición por activo según CTEM-Nexus': 'Exposure per asset according to CTEM-Nexus', 'Exposición técnica según CTEM-Nexus': 'Technical exposure according to CTEM-Nexus',
+  'Riesgo de interrupción': 'Disruption risk', 'Abiertos': 'Open', 'Críticos': 'Critical', 'KEV': 'KEV', 'Rutas': 'Paths', 'Peor hallazgo': 'Worst finding', 'Peor hallazgo:': 'Worst finding:',
+  'Sin pareja en KAIROS': 'No match in KAIROS', '1 activo sin pareja': '1 unmatched asset', 'en CTEM-Nexus, etiqueta el activo con kairos:ID': 'in CTEM-Nexus, tag the asset with kairos:ID',
+  'Quitar la exposición importada': 'Remove the imported exposure', 'Exposición alta': 'High exposure', 'Exposición media': 'Medium exposure',
+  'Riesgo de interrupción alto': 'High disruption risk', 'Riesgo de interrupción medio': 'Medium disruption risk', 'Riesgo de interrupción bajo': 'Low disruption risk',
+  'Altos': 'High', 'Explotados (KEV)': 'Exploited (KEV)', 'Rutas de ataque': 'Attack paths', 'Puntuación máx.': 'Max. score',
+  'Un ciberataque es hoy el escenario de interrupción más probable para este activo: ensáyalo en una prueba y coordina la corrección con seguridad.': 'A cyberattack is today the most likely disruption scenario for this asset: rehearse it in a test and coordinate the fix with security.',
+  'Hay hallazgos abiertos sin camino directo desde Internet: vigila que no bloqueen la recuperación.': 'There are open findings with no direct path from the Internet: make sure they do not block recovery.',
+  'Sin hallazgos abiertos en el último análisis.': 'No open findings in the latest analysis.',
+  'Exposición de CTEM-Nexus retirada': 'CTEM-Nexus exposure removed', 'El fichero no es un sobre de activos de CTEM-Nexus': 'The file is not a CTEM-Nexus assets envelope',
+  'Abre antes el proyecto al que pertenece la exposición.': 'First open the project the exposure belongs to.',
+  'Activo de una función crítica con riesgo de interrupción alto por exposición técnica (CTEM-Nexus)': 'Asset of a critical function with a high disruption risk from technical exposure (CTEM-Nexus)',
+  'Coordinar con seguridad la corrección de esos hallazgos y ensayar en el BCP el escenario de ciberataque sobre este activo.': 'Coordinate the fix of those findings with security and rehearse the cyberattack scenario on this asset in the BCP.',
   'Herramientas GRC del autor': 'GRC tools by the author', 'Estás aquí': 'You are here', 'Abrir la app': 'Open the app', 'Código': 'Code',
-  'Se complementan: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS y KAIROS cubre la continuidad.': 'They work together: ARGOS trains you, Rosetta translates between frameworks, ENS Compliance Studio prepares ENS conformity and KAIROS covers continuity.', 'Laboratorio de práctica GRC: rutas, casos prácticos y simulacros de ENS, ISO/IEC 27001 y continuidad, con puntos y logros.': 'GRC practice lab: ENS, ISO/IEC 27001 and continuity paths, case studies and timed mock exams, with points and badges.',
-  'Mapa multinorma: ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en 115 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.': 'Multi-framework map: ENS, ISO/IEC 27001, NIS2 and ISO/IEC 42001 in 115 unified controls, with ENS ↔ ISO equivalences aligned with CCN-STIC 825.',
+  'Se complementan y comparten un formato de intercambio: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS, KAIROS cubre la continuidad, CTEM-Nexus mide la exposición técnica, ENS AD Auditor revisa el directorio y Norvik gobierna el conjunto.': 'They work together and share one exchange format: ARGOS trains you, Rosetta translates between frameworks, ENS Compliance Studio prepares ENS conformity, KAIROS covers continuity, CTEM-Nexus measures technical exposure, ENS AD Auditor reviews the directory and Norvik governs the whole.',
+  'Laboratorio de práctica GRC: rutas, máquinas con flags y simulacros cronometrados de ENS, ISO/IEC 27001 y continuidad, con rangos y logros.': 'GRC practice lab: ENS, ISO/IEC 27001 and continuity paths, machines with flags and timed mock exams, with ranks and badges.',
+  'Mapa multinorma: 15 normas y leyes de la UE, EE. UU. y Latinoamérica sobre 152 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.': 'Multi-framework map: 15 standards and laws from the EU, the US and Latin America on 152 unified controls, with ENS ↔ ISO equivalences aligned with CCN-STIC 825.',
   'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.': 'System categorisation, MAGERIT risk analysis, Statement of Applicability and ENS pre-audit.',
   'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.': 'Business continuity: BIA, BCP and DRP with the critical recovery path of each function.',
+  'Gestión de la exposición: prioriza hallazgos de escáneres y pentest y dibuja las rutas de ataque hacia los activos críticos.': 'Exposure management: prioritises scanner and pentest findings and draws the attack paths to critical assets.',
+  'Audita el Directorio Activo frente a las medidas de control de acceso del ENS (op.acc).': 'Audits Active Directory against the ENS access control measures (op.acc).',
+  'Gobernanza de escritorio: roles, responsables y políticas que unen al resto de herramientas.': 'Desktop governance: roles, owners and policies that tie the other tools together.',
   // Avisos
   'Activo añadido': 'Asset added', 'Función añadida': 'Function added', 'Proveedor añadido': 'Supplier added', 'Proveedor eliminado': 'Supplier deleted', 'Prueba registrada': 'Test recorded',
   'Caso restablecido a su estado original': 'Case reset to its original state', 'Casos de ejemplo cerrados': 'Sample cases closed', 'Datos borrados': 'Data deleted',
@@ -1459,6 +1535,8 @@ const EN_RE = [
   [/^([\d.,]+ %) de RTO alcanzables$/, '$1 of RTOs achievable'],
   [/^(\d+) de (\d+)$/, '$1 of $2'],
   [/^(\d+) reglas$/, '$1 rules'],
+  [/^(\d+) activos sin pareja$/, '$1 unmatched assets'],
+  [/^Exposición importada: (\d+) de (\d+) activos emparejados$/, 'Exposure imported: $1 of $2 assets matched'],
   [/^(\d+) menor(?:es)? · (\d+) observaci(?:ón|ones) · (.+)$/, (m, a, b, c) => `${a} minor · ${plEn(b, 'observation', 'observations')} · ${c.replace(/^última prueba /, 'last test ').replace(/^sin pruebas$/, 'no tests')}`],
   [/^(\d+) \(típico\)$/, '$1 (typical)'],
   [/^Cada (\d+) días como máximo$/, 'At least every $1 days'],
@@ -1527,6 +1605,7 @@ const EN_RE = [
   [/^Falta (.+)\.$/, (m, a) => `Missing ${a.replace('el paso a paso', 'the step-by-step procedure').replace('el criterio de éxito', 'the success criterion').replace(' y ', ' and ')}.`],
   [/^Restaurar una muestra y registrar fecha, responsable y resultado \(al menos cada (\d+) días\)\.$/, 'Restore a sample and record date, owner and result (at least every $1 days).'],
   [/^Última restauración el (.+), hace (\d+) días \(límite: (\d+)\)\.$/, 'Last restore on $1, $2 days ago (limit: $3).'],
+  [/^Sostiene (.+)\. CTEM-Nexus ve (\d+) hallazgos? abiertos? \((\d+) críticos?, (\d+) explotados? activamente\) y (\d+) rutas? de ataque(?:; el peor: (.+))?\.$/, (m, f, a, c, k, r, w) => `Supports ${f}. CTEM-Nexus sees ${plEn(a, 'open finding', 'open findings')} (${c} critical, ${k} actively exploited) and ${plEn(r, 'attack path', 'attack paths')}${w ? `; the worst: ${w}` : ''}.`],
   [/^(.+) no tiene suplente: si no está disponible, el plan se detiene\.$/, '$1 has no deputy: if unavailable, the plan stops.'],
   [reT('El plan se activa a las §T y la función crítica más exigente tiene un RTO de §T: se activaría con el objetivo ya incumplido\\.'), (m, a, b) => `The plan activates at ${tH(a)} and the tightest critical function has an RTO of ${tH(b)}: it would activate with the objective already missed.`],
   [reT('Bajar el umbral de activación por debajo de §T\\.'), (m, a) => `Lower the activation threshold below ${tH(a)}.`],
@@ -1570,7 +1649,7 @@ const E = window.KairosEngine;
 /* Librería para escribir el Excel propio (nunca lee ficheros ajenos). La versión autónoma la lleva incrustada
  * sin ejecutar; la alojada la pide al CDN con integridad (SRI). */
 const XLSX_LIB = { id: 'xlsx-escribir', cdn: 'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js', sri: 'sha384-OUW9euuUyxyHcAhTqbhI+Iyb8LMssXt/cpz0yXhs9UWG2/R/uaWdakx/4cfww7Vb' };
-const VERSION = '1.0.1';
+const VERSION = '1.1.0';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const $ = (s, r = document) => r.querySelector(s);
@@ -1772,6 +1851,9 @@ function sanitizeState(raw) {
   st.acciones = {};
   for (const [k, a] of safeEntries(r.acciones, 2000)) if (isObj(a) && k.length <= 200) st.acciones[k] = { estado: oneOf(a.estado, ['Pendiente', 'En curso', 'Hecha'], 'Pendiente'), responsable: s(a.responsable, 200), fecha: dateOk(a.fecha) };
   st.historial = arr(r.historial, 60).filter((h) => isObj(h) && dateOk(h.fecha)).map((h) => ({ fecha: h.fecha, preparacion: num(h.preparacion, 0, 1, 0), ncMayor: Math.round(num(h.ncMayor, 0, 9999, 0)), ncMenor: Math.round(num(h.ncMenor, 0, 9999, 0)), exposicion: num(h.exposicion, 0, 1e12, 0) }));
+  // Exposición técnica importada de CTEM-Nexus (sobre «yrd-ecosistema»): se vuelve a sanear en cada carga
+  const ctem = isObj(r.ctem) ? E.desdeCtem(r.ctem) : null;
+  if (ctem && Object.keys(ctem.activos).length) st.ctem = ctem;
   return st;
 }
 const PROJ_ID = /^(p-[a-z0-9]{4,20}|demo-[a-z]{2,20})$/;
@@ -1798,6 +1880,8 @@ function checkSize(f, max, label) { if (f.size > max) { toast(`${label} demasiad
 /* ===== 02-icons.js ===== */
 /* ---------- Iconografía (trazo 1.75, 24×24) ---------- */
 const ICONS = {
+  blocks: '<rect width="7" height="7" x="14" y="3" rx="1"/><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3"/>',
+  radar: '<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>',
   lifebuoy: '<circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/>',
   network: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
   database: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>',
@@ -2281,25 +2365,29 @@ const GLOSARIO = [
   ['NC mayor / NC menor', 'No conformidades. La mayor compromete un requisito; la menor es un incumplimiento puntual. La observación es una oportunidad de mejora.']
 ];
 const FAQ = [
-  ['¿En qué se diferencia de la plantilla de BIA y BCP?', 'La plantilla recoge los datos; KAIROS además calcula. Recorre las dependencias para saber cuándo vuelve cada función, compara el RPO con la frecuencia real de las copias, comprueba que el plan se activa antes de que venza el RTO y que el sitio alternativo llega a tiempo, y revisa todo con 28 reglas.'],
+  ['¿En qué se diferencia de la plantilla de BIA y BCP?', 'La plantilla recoge los datos; KAIROS además calcula. Recorre las dependencias para saber cuándo vuelve cada función, compara el RPO con la frecuencia real de las copias, comprueba que el plan se activa antes de que venza el RTO y que el sitio alternativo llega a tiempo, y revisa todo con 29 reglas.'],
   ['¿Por qué no se exige que el RPO sea menor que el RTO?', 'Porque miden cosas distintas: el RTO es tiempo sin servicio y el RPO, datos perdidos. Una función puede tolerar 24 h de parada y ninguna pérdida de datos (RPO 0, RTO 24 h). Lo que sí se exige es RTO menor que MTPD.'],
   ['¿Cómo se calcula el RTO alcanzable?', 'Cada activo empieza a recuperarse cuando terminan aquellos de los que depende, y tarda lo que indica su procedimiento o, si no consta, lo típico de su estrategia. Una función vuelve cuando terminan sus activos, las funciones de las que depende y el plazo comprometido por sus proveedores.'],
   ['¿Qué activos cuentan para el RPO?', 'Solo los marcados como «guarda datos de la función». Las copias de configuración de red o del directorio no determinan la pérdida de datos de negocio.'],
   ['¿Dónde se guardan mis datos?', 'Solo en este navegador. No hay servidor ni cuentas. Usa Ajustes → Copia de seguridad para llevarte tus proyectos a otro equipo.'],
   ['¿Sirve para organizaciones fuera del ENS?', 'Sí. Las reglas de ISO 22301 e ISO/IEC 27001 aplican igual; la categoría solo modula qué se exige de op.cont.2 a op.cont.4.']
 ];
-/* Herramientas GRC del autor: el mismo bloque en Rosetta, ENS Compliance Studio y KAIROS */
+/* Herramientas GRC del autor: el mismo bloque en Rosetta, ENS Compliance Studio, KAIROS, CTEM-Nexus y ARGOS.
+ * Todas comparten el sobre de intercambio «yrd-ecosistema». Sin web publicada: solo enlace al código. */
 const SUITE = [
-  ['argos', 'ARGOS', 'Laboratorio de práctica GRC: rutas, casos prácticos y simulacros de ENS, ISO/IEC 27001 y continuidad, con puntos y logros.', 'https://heindall92.github.io/argos-grc/', 'https://github.com/heindall92/argos-grc'],
-  ['rosetta', 'Rosetta', 'Mapa multinorma: ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en 115 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.', 'https://heindall92.github.io/rosetta_multinorma/', 'https://github.com/heindall92/rosetta_multinorma'],
+  ['argos', 'ARGOS', 'Laboratorio de práctica GRC: rutas, máquinas con flags y simulacros cronometrados de ENS, ISO/IEC 27001 y continuidad, con rangos y logros.', 'https://heindall92.github.io/argos-grc/', 'https://github.com/heindall92/argos-grc'],
+  ['rosetta', 'Rosetta', 'Mapa multinorma: 15 normas y leyes de la UE, EE. UU. y Latinoamérica sobre 152 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.', 'https://heindall92.github.io/rosetta_multinorma/', 'https://github.com/heindall92/rosetta_multinorma'],
   ['ens', 'ENS Compliance Studio', 'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.', 'https://heindall92.github.io/grc_ens_compliance_studio/app/dist/ens-compliance-studio.html', 'https://github.com/heindall92/grc_ens_compliance_studio'],
-  ['kairos', 'KAIROS', 'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.', 'https://heindall92.github.io/kairos/', 'https://github.com/heindall92/kairos']
+  ['kairos', 'KAIROS', 'Continuidad de negocio: BIA, BCP y DRP con la ruta crítica de recuperación de cada función.', 'https://heindall92.github.io/kairos/', 'https://github.com/heindall92/kairos'],
+  ['ctem', 'CTEM-Nexus', 'Gestión de la exposición: prioriza hallazgos de escáneres y pentest y dibuja las rutas de ataque hacia los activos críticos.', 'https://heindall92.github.io/ctem-nexus/', 'https://github.com/heindall92/ctem-nexus'],
+  ['adaudit', 'ENS AD Auditor', 'Audita el Directorio Activo frente a las medidas de control de acceso del ENS (op.acc).', null, 'https://github.com/heindall92/ens_ad-auditor'],
+  ['norvik', 'Norvik', 'Gobernanza de escritorio: roles, responsables y políticas que unen al resto de herramientas.', null, 'https://github.com/heindall92/Norvik_Gobernanza']
 ];
 function suiteGrc() {
   const ext = (h, l, ic) => `<a class="btn sm" href="${h}" target="_blank" rel="noopener noreferrer">${icon(ic, 14)}${l}</a>`;
-  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS y KAIROS cubre la continuidad.</p>
+  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan y comparten un formato de intercambio: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS, KAIROS cubre la continuidad, CTEM-Nexus mide la exposición técnica, ENS AD Auditor revisa el directorio y Norvik gobierna el conjunto.</p>
     <div class="suite-grid">${SUITE.map(([id, n, d, app, repo]) => `<article class="suite-card${id === 'kairos' ? ' here' : ''}"><div class="suite-hd"><b>${n}</b>${id === 'kairos' ? '<span class="badge accent">Estás aquí</span>' : ''}</div><p>${d}</p>
-      <div class="row">${id === 'kairos' ? ext(repo, 'Código', 'external') : ext(app, 'Abrir la app', 'arrowRight') + ext(repo, 'Código', 'external')}</div></article>`).join('')}</div></section>`;
+      <div class="row">${id === 'kairos' || !app ? ext(repo, 'Código', 'external') : ext(app, 'Abrir la app', 'arrowRight') + ext(repo, 'Código', 'external')}</div></article>`).join('')}</div></section>`;
 }
 function vAyuda() {
   const tabs = [['inicio', 'Primeros pasos', 'flag'], ['metodo', 'Cómo calcula', 'gauge'], ['glosario', 'Glosario', 'book'], ['reglas', 'Reglas de preauditoría', 'shieldCheck'], ['atajos', 'Atajos de teclado', 'keyboard'], ['faq', 'Preguntas frecuentes', 'help'], ['acerca', 'Acerca de', 'info']];
@@ -2577,12 +2665,24 @@ function gantt() {
     <div class="legend"><span><i class="lg s-mayor"></i>Listo a tiempo</span><span><i class="lg s-over"></i>Listo después de lo que exigen sus funciones</span><span><i class="lg mk mk-rto"></i>RTO más exigente de las funciones que lo usan</span></div>`;
 }
 function addActivo() { const id = nextId('A-', state.activos); state.activos.push({ id, nombre: 'Nuevo activo', tipo: 'Servidor', datos: false, estrategia: 'ninguna', tiempoRecuperacion: null, dependeDe: [], ubicacion: '', responsable: '', procedimiento: { pasos: '', exito: '', credenciales: '' }, backup: { aplica: false } }); ui.aOpen = id; commit('Activo añadido'); }
+/* Exposición técnica que CTEM-Nexus atribuye a un activo (sobre «activos» importado en Exportar → Ecosistema) */
+const ctemDe = (id) => (state.ctem && state.ctem.activos[id]) || null;
+const RIESGO_TXT = { alto: 'Riesgo de interrupción alto', medio: 'Riesgo de interrupción medio', bajo: 'Riesgo de interrupción bajo' };
+function ctemBloque(cx) {
+  const kv = (k, v) => `<span class="rh-kv"><small>${k}</small><b class="num">${v}</b></span>`;
+  return `<div class="ctem-blk ${cx.riesgoInterrupcion}" role="group" aria-label="Exposición técnica según CTEM-Nexus">
+    <div class="ctem-hd">${icon('radar', 16)}<b>${RIESGO_TXT[cx.riesgoInterrupcion]}</b><span class="muted small">CTEM-Nexus · ${esc(state.ctem.generado ? state.ctem.generado.slice(0, 10) : '')}</span></div>
+    <div class="ctem-kv">${kv('Abiertos', cx.abiertos)}${kv('Críticos', cx.criticos)}${kv('Altos', cx.altos)}${kv('Explotados (KEV)', cx.kev)}${kv('Rutas de ataque', cx.rutasDeAtaque)}${kv('Puntuación máx.', Math.round(cx.puntuacionMaxima))}</div>
+    ${cx.peorHallazgo ? `<p class="small">Peor hallazgo: <b>${esc(cx.peorHallazgo)}</b></p>` : ''}
+    <p class="muted small">${cx.riesgoInterrupcion === 'alto' ? 'Un ciberataque es hoy el escenario de interrupción más probable para este activo: ensáyalo en una prueba y coordina la corrección con seguridad.' : cx.riesgoInterrupcion === 'medio' ? 'Hay hallazgos abiertos sin camino directo desde Internet: vigila que no bloqueen la recuperación.' : 'Sin hallazgos abiertos en el último análisis.'}</p></div>`;
+}
 function vRecuperacion() {
   const cards = calc.ordenRecuperacion.map((r) => {
     const i = aIdx(r.id); const a = state.activos[i]; const open = ui.aOpen === r.id; const late = r.rtoObjetivo !== null && r.fin > r.rtoObjetivo + 1e-9;
+    const cx = ctemDe(r.id);
     const head = `<button type="button" class="row-head" data-act="a-toggle" data-id="${esc(r.id)}" aria-expanded="${open}" aria-controls="ad-${esc(r.id)}">
       <span class="ord num">${r.orden}</span><code>${esc(r.id)}</code><span class="rh-name"><b>${esc(a.nombre)}</b><small>${esc(a.tipo)}${a.datos ? ' · guarda datos' : ''}</small></span>
-      <span class="badge ${a.estrategia === 'ninguna' ? 'crit' : 'neutral'}">${E.ESTRATEGIAS[a.estrategia].label}</span>
+      <span class="badge ${a.estrategia === 'ninguna' ? 'crit' : 'neutral'}">${E.ESTRATEGIAS[a.estrategia].label}</span>${cx && cx.riesgoInterrupcion !== 'bajo' ? `<span class="badge ${cx.riesgoInterrupcion === 'alto' ? 'crit' : 'warn'}">${icon('radar', 13)}${cx.riesgoInterrupcion === 'alto' ? 'Exposición alta' : 'Exposición media'}</span>` : ''}
       <span class="rh-kv"><small>Tarda</small><b>${fmtH(r.tiempo)}</b></span><span class="rh-kv"><small>Listo</small><b class="${late ? 'crit-t' : ''}">${fmtH(r.fin)}</b></span>${icon('chevronDown', 18, 'chev')}</button>`;
     if (!open) return `<article class="row-card">${head}</article>`;
     const p = `activos.${i}`;
@@ -2597,6 +2697,7 @@ function vRecuperacion() {
         <div class="fld span4">${inChk(`${p}.datos`, a.datos, 'Guarda datos de las funciones (determina el RPO)')}</div>
       </div>
       <p class="muted small">${esc(E.ESTRATEGIAS[a.estrategia].desc)}. Lo necesitan ${r.funciones.length ? r.funciones.join(', ') : 'ninguna función'}${r.rtoObjetivo !== null ? `; la más exigente pide ${fmtH(r.rtoObjetivo)}` : ''}.</p>
+      ${cx ? ctemBloque(cx) : ''}
       <div class="grid g2"><div><h4>Procedimiento</h4>
         ${fld('Pasos de recuperación', inArea(`${p}.procedimiento.pasos`, a.procedimiento.pasos, 'rows="6" placeholder="Pasos ejecutables por un técnico sin conocimiento previo del entorno"'))}
         ${fld('Criterio de éxito', inArea(`${p}.procedimiento.exito`, a.procedimiento.exito, 'placeholder="Cómo se verifica que funciona"'))}
@@ -2773,7 +2874,23 @@ function vExportar() {
     ${card('listChecks', 'Plan de acción', 'Una fila por incidencia con estado, responsable y fecha límite.', 'export-acciones', 'CSV')}
     ${card('download', 'Proyecto', 'El proyecto completo para guardarlo o abrirlo en otro equipo con KAIROS.', 'export-json', 'JSON')}
     ${card('upload', 'Importar un proyecto', 'Abre un proyecto exportado desde KAIROS. Se valida antes de usarse.', 'import-json', 'JSON')}
-  </div>`;
+  </div>
+  ${ecosistema(card)}`;
+}
+/* Ecosistema: el BIA viaja a CTEM-Nexus y vuelve la exposición técnica de cada activo (sobre «yrd-ecosistema») */
+function ecosistema(card) {
+  const cx = state.ctem; const ids = new Set(state.activos.map((a) => a.id));
+  const filas = cx ? Object.values(cx.activos).sort((a, b) => ({ alto: 0, medio: 1, bajo: 2 }[a.riesgoInterrupcion] - { alto: 0, medio: 1, bajo: 2 }[b.riesgoInterrupcion]) || b.puntuacionMaxima - a.puntuacionMaxima) : [];
+  const sinPareja = filas.filter((x) => !ids.has(x.activo)).length;
+  const tabla = cx ? `<div class="table-wrap" tabindex="0" role="region" aria-label="Exposición por activo según CTEM-Nexus"><table class="tbl"><thead><tr><th>Activo</th><th>Riesgo de interrupción</th><th class="c">Abiertos</th><th class="c">Críticos</th><th class="c">KEV</th><th class="c">Rutas</th><th>Peor hallazgo</th></tr></thead><tbody>
+    ${filas.map((x) => `<tr><td><code>${esc(x.activo)}</code> ${esc(ids.has(x.activo) ? state.activos.find((a) => a.id === x.activo).nombre : x.nombre)}${ids.has(x.activo) ? '' : ' <span class="badge neutral">Sin pareja en KAIROS</span>'}</td><td><span class="badge ${{ alto: 'crit', medio: 'warn', bajo: 'ok' }[x.riesgoInterrupcion]}">${RIESGO_TXT[x.riesgoInterrupcion]}</span></td><td class="c num">${x.abiertos}</td><td class="c num">${x.criticos}</td><td class="c num">${x.kev}</td><td class="c num">${x.rutasDeAtaque}</td><td class="small">${esc(x.peorHallazgo || '—')}</td></tr>`).join('')}</tbody></table></div>
+    <div class="row spread"><p class="muted small"><span class="no-tr">${esc(cx.proyecto || 'CTEM-Nexus')} · ${esc(cx.generado.slice(0, 10))}</span>${sinPareja ? ` · <span>${sinPareja === 1 ? '1 activo sin pareja' : `${sinPareja} activos sin pareja`}</span>: <span>en CTEM-Nexus, etiqueta el activo con kairos:ID</span>` : ''}</p><button type="button" class="btn sm danger" data-act="clear-ctem">${icon('trash', 15)}Quitar la exposición importada</button></div>` : '';
+  return `<section class="card eco" aria-labelledby="eco-h"><div class="card-head"><h2 id="eco-h">${icon('blocks', 18)}Ecosistema · CTEM-Nexus</h2><span class="muted small">Sobre común «yrd-ecosistema»</span></div>
+    <p class="muted small">El BIA fija en CTEM-Nexus la criticidad de cada activo; CTEM-Nexus devuelve su exposición técnica y la preauditoría avisa (CTM-01) si un activo de una función crítica tiene un riesgo de interrupción alto.</p>
+    <div class="export-grid">
+      ${card('blocks', 'BIA para CTEM-Nexus', 'Cada activo con las funciones que lo usan, su RTO, RPO, MTPD y coste por hora. Se importa en CTEM-Nexus → Ecosistema.', 'export-bia', 'JSON')}
+      ${card('radar', 'Importar exposición de CTEM-Nexus', 'El sobre «activos» de CTEM-Nexus: hallazgos abiertos, explotados y rutas de ataque por activo. Se valida antes de usarse.', 'import-ctem', 'JSON')}
+    </div>${tabla}</section>`;
 }
 
 /* ===== 06-io.js ===== */
@@ -2794,6 +2911,7 @@ function exportar(que) {
   if (que === 'plan') saveFile(`${slug()}_plan_continuidad_${today()}.md`, planMd());
   else if (que === 'informe') saveFile(`${slug()}_preauditoria_${today()}.md`, informeMd());
   else if (que === 'acciones') saveFile(`${slug()}_plan_accion_${today()}.csv`, accionesCsv());
+  else if (que === 'bia') saveFile(`${slug()}_bia_ecosistema_${today()}.json`, JSON.stringify(E.aSobreBia(state, calc, VERSION), null, 1), 'application/json');
   else if (que === 'json') saveFile(`${slug()}_proyecto_${today()}.json`, JSON.stringify(state, null, 1), 'application/json');
 }
 
@@ -2910,9 +3028,20 @@ async function exportXlsx() {
   finally { ui.busyXlsx = false; render(); }
 }
 
+/* Exposición técnica de CTEM-Nexus (sobre «activos») */
+function importCtem(text, raw) {
+  if (raw === undefined) { try { raw = safeParse(text); } catch (e) { toast('El fichero no es un JSON válido', 'error'); return; } }
+  if (!state) { toast('Abre antes el proyecto al que pertenece la exposición.', 'error'); return; }
+  const cx = E.desdeCtem(raw);
+  if (!cx || !Object.keys(cx.activos).length) { toast('El fichero no es un sobre de activos de CTEM-Nexus', 'error'); return; }
+  const ids = new Set(state.activos.map((a) => a.id)); const n = Object.keys(cx.activos).filter((id) => ids.has(id)).length;
+  state.ctem = cx; state = sanitizeState(state);
+  commit(`Exposición importada: ${n} de ${Object.keys(cx.activos).length} activos emparejados`);
+}
 /* Importación de proyecto y copia de seguridad */
 function importProyecto(text) {
   let raw; try { raw = safeParse(text); } catch (e) { toast('El fichero no es un JSON válido', 'error'); return; }
+  if (isObj(raw) && raw.format === 'yrd-ecosistema') return importCtem(text, raw);
   if (isObj(raw) && isObj(raw.ws) && Array.isArray(raw.proyectos)) return restaurar(raw);
   if (!isObj(raw) || !Array.isArray(raw.funciones)) { toast('El fichero no es un proyecto de KAIROS', 'error'); return; }
   createProject(raw, { msg: 'Proyecto importado' });
@@ -3097,6 +3226,9 @@ document.addEventListener('click', (ev) => {
     case 'export-informe': exportar('informe'); break;
     case 'export-acciones': exportar('acciones'); break;
     case 'export-json': exportar('json'); break;
+    case 'export-bia': exportar('bia'); break;
+    case 'import-ctem': pickFile('.json,application/json', (f) => checkSize(f, LIM.fileJson, 'El fichero es') && readText(f, importCtem)); break;
+    case 'clear-ctem': delete state.ctem; commit('Exposición de CTEM-Nexus retirada'); break;
     case 'export-xlsx': exportXlsx(); break;
     default: break;
   }

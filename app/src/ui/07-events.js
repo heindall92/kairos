@@ -164,6 +164,9 @@ document.addEventListener('click', (ev) => {
     case 'export-informe': exportar('informe'); break;
     case 'export-acciones': exportar('acciones'); break;
     case 'export-json': exportar('json'); break;
+    case 'export-bia': exportar('bia'); break;
+    case 'import-ctem': pickFile('.json,application/json', (f) => checkSize(f, LIM.fileJson, 'El fichero es') && readText(f, importCtem)); break;
+    case 'clear-ctem': delete state.ctem; commit('Exposición de CTEM-Nexus retirada'); break;
     case 'export-xlsx': exportXlsx(); break;
     default: break;
   }

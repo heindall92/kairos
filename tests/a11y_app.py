@@ -38,6 +38,12 @@ def states(page):
     J("window.__KAIROS__.openCase('techserv')")
     J("window.__KAIROS__.go('funciones')"); page.click('[data-act="f-toggle"][data-id="F-01"]'); yield "funciones/F-01"
     J("window.__KAIROS__.go('recuperacion')"); page.click('[data-act="a-toggle"][data-id="A-04"]'); yield "recuperacion/A-04"
+    with page.expect_file_chooser() as fc:
+        J("window.__KAIROS__.go('exportar')"); page.click('#view [data-act="import-ctem"]')
+    fc.value.set_files(str(ROOT / "tests" / "fixtures" / "ctem-a-kairos.json")); page.wait_for_selector(".eco .tbl"); yield "exportar/ctem"
+    J("window.__KAIROS__.go('recuperacion')"); page.click('[data-act="a-toggle"][data-id="A-03"]'); yield "recuperacion/ctem-A-03"
+    J("window.__KAIROS__.go('preauditoria')"); yield "preauditoria/ctem"
+    J("window.__KAIROS__.go('exportar')"); page.click('[data-act="clear-ctem"]')
     J("window.__KAIROS__.go('pruebas')"); page.locator('[data-act="t-toggle"]').first.click(); yield "pruebas/abierta"
     J("window.__KAIROS__.go('preauditoria')")
     for t in ["checklist", "revision"]:

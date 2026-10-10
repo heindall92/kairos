@@ -15,6 +15,7 @@ function exportar(que) {
   if (que === 'plan') saveFile(`${slug()}_plan_continuidad_${today()}.md`, planMd());
   else if (que === 'informe') saveFile(`${slug()}_preauditoria_${today()}.md`, informeMd());
   else if (que === 'acciones') saveFile(`${slug()}_plan_accion_${today()}.csv`, accionesCsv());
+  else if (que === 'bia') saveFile(`${slug()}_bia_ecosistema_${today()}.json`, JSON.stringify(E.aSobreBia(state, calc, VERSION), null, 1), 'application/json');
   else if (que === 'json') saveFile(`${slug()}_proyecto_${today()}.json`, JSON.stringify(state, null, 1), 'application/json');
 }
 
@@ -131,9 +132,20 @@ async function exportXlsx() {
   finally { ui.busyXlsx = false; render(); }
 }
 
+/* Exposición técnica de CTEM-Nexus (sobre «activos») */
+function importCtem(text, raw) {
+  if (raw === undefined) { try { raw = safeParse(text); } catch (e) { toast('El fichero no es un JSON válido', 'error'); return; } }
+  if (!state) { toast('Abre antes el proyecto al que pertenece la exposición.', 'error'); return; }
+  const cx = E.desdeCtem(raw);
+  if (!cx || !Object.keys(cx.activos).length) { toast('El fichero no es un sobre de activos de CTEM-Nexus', 'error'); return; }
+  const ids = new Set(state.activos.map((a) => a.id)); const n = Object.keys(cx.activos).filter((id) => ids.has(id)).length;
+  state.ctem = cx; state = sanitizeState(state);
+  commit(`Exposición importada: ${n} de ${Object.keys(cx.activos).length} activos emparejados`);
+}
 /* Importación de proyecto y copia de seguridad */
 function importProyecto(text) {
   let raw; try { raw = safeParse(text); } catch (e) { toast('El fichero no es un JSON válido', 'error'); return; }
+  if (isObj(raw) && raw.format === 'yrd-ecosistema') return importCtem(text, raw);
   if (isObj(raw) && isObj(raw.ws) && Array.isArray(raw.proyectos)) return restaurar(raw);
   if (!isObj(raw) || !Array.isArray(raw.funciones)) { toast('El fichero no es un proyecto de KAIROS', 'error'); return; }
   createProject(raw, { msg: 'Proyecto importado' });

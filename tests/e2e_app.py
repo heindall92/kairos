@@ -148,6 +148,40 @@ with sync_playwright() as p:
         wb = z.read("xl/workbook.xml").decode("utf-8")
     ok(len(sheets) == 7 and "Recuperación" in wb, f"Libro Excel generado sin red con 7 hojas ({len(sheets)})")
 
+    print("Ecosistema · CTEM-Nexus")
+    bia = json.loads(download(lambda: page.click('[data-act="export-bia"]')).read_text(encoding="utf-8"))
+    ok(bia["format"] == "yrd-ecosistema" and bia["tipo"] == "bia" and bia["origen"]["herramienta"] == "kairos" and len(bia["datos"]) == 9, "Sobre «bia» para CTEM-Nexus con los 9 activos")
+    ok(any(f["id"] == "F-03" for d in bia["datos"] if d["activo"] == "A-07" for f in d["funciones"]), "Cada activo lleva las funciones que lo usan")
+    sobre = ROOT / "tests" / "fixtures" / "ctem-a-kairos.json"
+    nc0 = calc()["kpi"]["ncMenor"]
+    with page.expect_file_chooser() as fc:
+        page.click('#view [data-act="import-ctem"]')
+    fc.value.set_files(str(sobre)); page.wait_for_selector(".eco .tbl")
+    ok(len(J(f"Object.keys({K}.state.ctem.activos)")) == 6 and page.locator(".eco .tbl tbody tr").count() == 6, "La exposición de CTEM-Nexus se importa y se lista por activo")
+    ok("emparejados" in page.locator("#toast").inner_text(), "El aviso dice cuántos activos se emparejan")
+    ctm = J(f"{K}.calc.checks.filter(c => c.id === 'CTM-01').map(c => c.ambito.split(' ')[0])")
+    ok(len(ctm) >= 1 and calc()["kpi"]["ncMenor"] == nc0 + len(ctm), f"La preauditoría añade CTM-01 por activo crítico expuesto ({', '.join(ctm)})")
+    J(f"{K}.go('recuperacion')")
+    ok(page.locator(".row-head .badge", has_text="Exposición alta").count() >= 1, "Recuperación marca los activos con exposición alta")
+    page.click(f'[data-act="a-toggle"][data-id="{ctm[0]}"]')
+    ok(page.locator(".ctem-blk.alto").count() == 1 and "Rutas de ataque" in page.locator(".ctem-blk").inner_text(), "La ficha del activo muestra su exposición técnica")
+    page.screenshot(path=str(OUT / "05b_ctem.png"))
+    page.reload(); page.wait_for_selector("#view h1")
+    ok(len(J(f"Object.keys(({K}.state.ctem || {{activos: {{}}}}).activos)")) == 6, "La exposición importada sobrevive a la recarga")
+    ajeno = OUT / "ajeno.json"; ajeno.write_text(json.dumps({**json.loads(sobre.read_text(encoding="utf-8")), "origen": {"herramienta": "otra", "version": "1", "generado": "x"}}), encoding="utf-8")
+    J(f"{K}.go('exportar')")
+    with page.expect_file_chooser() as fc:
+        page.click('#view [data-act="import-ctem"]')
+    fc.value.set_files(str(ajeno)); page.wait_for_timeout(300)
+    ok("no es un sobre" in page.locator("#toast").inner_text() and len(J(f"Object.keys({K}.state.ctem.activos)")) == 6, "Un sobre de otra herramienta se rechaza sin tocar lo importado")
+    page.click('[data-act="clear-ctem"]')
+    ok(J(f"{K}.state.ctem") is None and page.locator(".eco .tbl").count() == 0, "La exposición importada se puede retirar")
+    with page.expect_file_chooser() as fc:
+        page.click('#view [data-act="import-json"]')
+    fc.value.set_files(str(sobre)); page.wait_for_selector(".eco .tbl")
+    ok(J(f"{K}.state.meta.nombre") == pj["meta"]["nombre"] and len(J(f"Object.keys({K}.state.ctem.activos)")) == 6, "«Importar un proyecto» reconoce el sobre y no sustituye el proyecto")
+    page.click('[data-act="clear-ctem"]')
+
     print("Asistente de nuevo proyecto")
     J(f"{K}.go('nuevo')")
     page.click('[data-act="wz-next"]')
@@ -220,6 +254,14 @@ with sync_playwright() as p:
     J(f"{K}.go('preauditoria')")
     ok("Major NC" in page.locator("#view").inner_text(), "Severidades traducidas en la preauditoría")
     page.screenshot(path=str(OUT / "04_en.png"))
+    with page.expect_file_chooser() as fc:
+        J(f"{K}.go('exportar')"); page.click('#view [data-act="import-ctem"]')
+    fc.value.set_files(str(ROOT / "tests" / "fixtures" / "ctem-a-kairos.json")); page.wait_for_selector(".eco .tbl")
+    eco = page.locator(".eco").inner_text()
+    ok("Ecosystem · CTEM-Nexus" in eco and "High disruption risk" in eco and "Exposure imported" in page.locator("#toast").inner_text(), "El bloque Ecosistema y sus avisos se traducen")
+    J(f"{K}.go('preauditoria')")
+    ok("CTEM-Nexus sees" in page.locator("#view").inner_text() and "CTEM-Nexus ve" not in page.locator("#view").inner_text(), "El detalle de CTM-01 se traduce")
+    J(f"{K}.go('exportar')"); page.click('[data-act="clear-ctem"]')
     page.click('[data-act="set"][data-k="idioma"][data-v="es"]')
     page.click('#top [data-act="cycle-theme"]'); page.click('#top [data-act="cycle-theme"]')
     J(f"{K}.go('panel')")
@@ -239,7 +281,7 @@ with sync_playwright() as p:
 
     print("Herramientas GRC del autor")
     J(f"{K}.go('ayuda')"); page.click('[data-act="help-tab"][data-tab="acerca"]')
-    ok(page.locator(".suite-card").count() == 4, "Acerca de: cuatro tarjetas (ARGOS, Rosetta, ENS Compliance Studio y KAIROS)")
+    ok(page.locator(".suite-card").count() == 7, "Acerca de: siete tarjetas (ARGOS, Rosetta, ENS Compliance Studio, KAIROS, CTEM-Nexus, ENS AD Auditor y Norvik)")
     ok("KAIROS" in page.locator(".suite-card.here").inner_text() and page.locator(".suite-card.here a").count() == 1, "KAIROS aparece como «Estás aquí» y solo enlaza a su código")
     suite = J("[...document.querySelectorAll('.suite a')].map(a => [a.href, a.target, a.rel])")
     hosts = ["heindall92.github.io/argos-grc", "github.com/heindall92/argos-grc", "heindall92.github.io/rosetta_multinorma", "github.com/heindall92/rosetta_multinorma", "heindall92.github.io/grc_ens_compliance_studio", "github.com/heindall92/grc_ens_compliance_studio", "github.com/heindall92/kairos"]

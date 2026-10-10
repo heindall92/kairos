@@ -231,7 +231,8 @@
     ['TST-03', 'Prueba fallida o parcial sin acción correctiva', 'ISO 22301 § 10.1'],
     ['TST-04', 'Última prueba hace más de un año', 'ENS op.cont.3 · ISO 22301 § 8.5'],
     ['REV-01', 'Revisión del BIA vencida o sin fecha', 'ISO 22301 § 9.1 · ENS op.cont.1'],
-    ['REV-02', 'Plan sin aprobación de la dirección', 'ISO 22301 § 5.1 · § 5.2']
+    ['REV-02', 'Plan sin aprobación de la dirección', 'ISO 22301 § 5.1 · § 5.2'],
+    ['CTM-01', 'Activo de una función crítica con riesgo de interrupción alto por exposición técnica (CTEM-Nexus)', 'ISO 22301 § 8.2.3 · ENS op.cont.1 · op.exp.4']
   ];
   const REGLA = Object.fromEntries(REGLAS.map(([id, titulo, ref]) => [id, { titulo, ref }]));
 
@@ -296,6 +297,14 @@
       }
     }
 
+    // Exposición técnica importada de CTEM-Nexus: un ciberataque es el escenario de interrupción más probable
+    const ctem = (st.ctem && st.ctem.activos) || {};
+    for (const x of c.ax) {
+      const e = ctem[x.a.id];
+      if (!e || !x.critico || e.riesgoInterrupcion !== 'alto') continue;
+      add('CTM-01', 'NC menor', `${x.a.id} · ${x.a.nombre}`, `Sostiene ${x.funciones.join(', ')}. CTEM-Nexus ve ${e.abiertos} hallazgo${e.abiertos === 1 ? '' : 's'} abierto${e.abiertos === 1 ? '' : 's'} (${e.criticos} crítico${e.criticos === 1 ? '' : 's'}, ${e.kev} explotado${e.kev === 1 ? '' : 's'} activamente) y ${e.rutasDeAtaque} ruta${e.rutasDeAtaque === 1 ? '' : 's'} de ataque${e.peorHallazgo ? `; el peor: ${e.peorHallazgo}` : ''}.`, 'Coordinar con seguridad la corrección de esos hallazgos y ensayar en el BCP el escenario de ciberataque sobre este activo.');
+    }
+
     const bcp = st.bcp || {};
     for (const r of bcp.equipo || []) if (!isBlank(r.titular) && isBlank(r.suplente)) add('BCP-01', exigeContinuidad ? 'NC menor' : 'Observación', r.rol || 'Equipo de crisis', `${r.titular} no tiene suplente: si no está disponible, el plan se detiene.`, 'Designar un suplente con la misma autoridad y formación.');
     if ((bcp.equipo || []).length === 0 || (bcp.equipo || []).every((r) => isBlank(r.titular))) add('BCP-01', exigeContinuidad ? 'NC mayor' : 'NC menor', 'Equipo de crisis', 'No hay equipo de crisis designado.', 'Designar al menos responsable de crisis, de recuperación técnica y de comunicación, con suplentes.');
@@ -355,6 +364,37 @@
     return { preparacion: r.kpi.preparacion, ncMayor: r.kpi.ncMayor, ncMenor: r.kpi.ncMenor, exposicion: Math.round(r.kpi.exposicion) };
   }
 
-  return { HORIZONTES, DIMENSIONES, NIVELES, CATEGORIAS, ESTRATEGIAS, TIPOS_ACTIVO, TIPOS_PRUEBA, RESULTADOS, SEV, REGLAS,
+  /* ---------- Ecosistema: sobre «yrd-ecosistema» con CTEM-Nexus ---------- */
+  const ECO = 'yrd-ecosistema';
+  const isO = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+  const tx = (v, n) => (typeof v === 'string' ? v : typeof v === 'number' && isFinite(v) ? String(v) : '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, n || 200);
+  const ent = (v, max) => { const x = typeof v === 'number' && isFinite(v) ? Math.round(v) : 0; return Math.max(0, Math.min(max || 1e6, x)); };
+  /** BIA como sobre «bia»: cada activo con las funciones que lo usan y sus objetivos (CTEM-Nexus calcula la criticidad). */
+  function aSobreBia(st, c, version, ahora) {
+    const datos = c.activos.map((x) => ({
+      activo: x.a.id, nombre: x.a.nombre, tipo: x.a.tipo, responsable: tx(x.a.responsable, 120), dependeDe: [...(x.a.dependeDe || [])],
+      funciones: x.funciones.map((id) => { const f = c.fxById.get(id); return { id, nombre: f ? f.nombre : id, rto: f ? f.rto : null, rpo: f ? f.rpo : null, mtpd: f ? f.mtpd : null, costeHora: f ? f.costeHora : 0, criticidad: f ? f.criticidad : null }; })
+    }));
+    const m = st.meta || {};
+    return { format: ECO, version: 1, origen: { herramienta: 'kairos', version: String(version || ''), generado: (ahora || new Date()).toISOString().replace(/\.\d{3}Z$/, 'Z') }, tipo: 'bia', proyecto: tx(m.organizacion || m.nombre, 120), datos };
+  }
+  /** Riesgo de interrupción que exporta CTEM-Nexus (sobre «activos»), saneado. Devuelve null si no lo es. */
+  function desdeCtem(o) {
+    if (!isO(o)) return null;
+    const sobre = o.format === ECO;
+    if (sobre && (o.version !== 1 || !isO(o.origen) || o.origen.herramienta !== 'ctem-nexus' || o.tipo !== 'activos' || !Array.isArray(o.datos))) return null;
+    const lista = sobre ? o.datos : isO(o.activos) ? Object.values(o.activos) : null;
+    if (!lista) return null;
+    const activos = {};
+    for (const d of lista.slice(0, 2000)) {
+      if (!isO(d) || !/^[\w.-]{1,40}$/.test(tx(d.activo, 40))) continue;
+      activos[tx(d.activo, 40)] = { activo: tx(d.activo, 40), nombre: tx(d.nombre, 160), criticidad: ent(d.criticidad, 5), abiertos: ent(d.abiertos), criticos: ent(d.criticos), altos: ent(d.altos), kev: ent(d.kev),
+        rutasDeAtaque: ent(d.rutasDeAtaque), puntuacionMaxima: Math.max(0, Math.min(100, Number(d.puntuacionMaxima) || 0)), peorHallazgo: tx(d.peorHallazgo, 200),
+        riesgoInterrupcion: ['alto', 'medio', 'bajo'].includes(d.riesgoInterrupcion) ? d.riesgoInterrupcion : 'bajo' };
+    }
+    return { generado: tx(sobre ? o.origen.generado : o.generado, 40), proyecto: tx(o.proyecto, 120), activos };
+  }
+
+  return { aSobreBia, desdeCtem, HORIZONTES, DIMENSIONES, NIVELES, CATEGORIAS, ESTRATEGIAS, TIPOS_ACTIVO, TIPOS_PRUEBA, RESULTADOS, SEV, REGLAS,
     num, isBlank, fmtH, diasEntre, curvaImpacto, mtpdMatriz, criticidad, tiempoActivo, recuperacionActivos, calcular, auditar, estadoEns, instantanea };
 });

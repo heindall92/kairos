@@ -709,3 +709,17 @@ input.late { box-shadow: inset 0 0 0 1.5px var(--crit); color: var(--crit); }
   body { background: #fff; } .view { padding: 0; }
   .card, .row-list, .metric, .table-wrap { box-shadow: none; border: 1px solid #ddd; }
 }
+
+/* Ecosistema · CTEM-Nexus */
+.eco { margin-top: var(--gap); display: flex; flex-direction: column; gap: 14px; }
+.eco .card-head { margin-bottom: 0; }
+.eco .card-head h2 { display: flex; align-items: center; gap: 8px; }
+.eco .export-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ctem-blk { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; margin: 4px 0 14px; border-radius: var(--r); background: var(--surface-2); box-shadow: inset 3px 0 0 var(--ok); }
+.ctem-blk.medio { box-shadow: inset 3px 0 0 var(--warn); } .ctem-blk.alto { box-shadow: inset 3px 0 0 var(--crit); background: var(--crit-soft); }
+.ctem-blk.alto .muted { color: var(--ink-2); }
+.ctem-hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ctem-kv { display: flex; gap: 6px 18px; flex-wrap: wrap; }
+.ctem-kv .rh-kv { align-items: flex-start; min-width: 0; }
+.row-head .badge svg { margin-right: 3px; vertical-align: -2px; }
+@media (max-width: 680px) { .eco .export-grid { grid-template-columns: 1fr; } }

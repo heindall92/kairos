@@ -67,7 +67,7 @@ const TILES = [
   tile('ruta', C.black, 'Ruta crítica', { g: 'route', ink: C.green }),
   tile('rpo', C.teal, 'RPO', { g: 'database', ink: K }),
   tile('crisis', C.orange, 'Crisis', { g: 'users', ink: K }),
-  tile('reglas', C.purple, '28 reglas', { g: 'listChecks' }),
+  tile('reglas', C.purple, '29 reglas', { g: 'listChecks' }),
   // Código
   tile('javascript', C.yellow, 'JavaScript', { text: { main: 'JS', sub: 'ES2022', size: 96 }, ink: K }),
   tile('html', C.orange, 'HTML', { text: { main: 'HTML', size: 72 }, ink: K }),
@@ -135,7 +135,7 @@ const footer = () => `<svg xmlns="http://www.w3.org/2000/svg" width="1280" heigh
 /* Cifras bajo la cabecera */
 const stats = (dark) => {
   const k = dark ? { bg: '#1C1C1E', ink: '#F5F5F7', faint: '#A1A1A6', acc: C.green } : { bg: '#F2F2F7', ink: '#111113', faint: '#5F5F64', acc: '#1A7F37' };
-  const items = [['5 × 4', 'matriz de impacto'], ['28', 'reglas de preauditoría'], ['3', 'casos de ejemplo'], ['0', 'peticiones de red']];
+  const items = [['5 × 4', 'matriz de impacto'], ['29', 'reglas de preauditoría'], ['3', 'casos de ejemplo'], ['0', 'peticiones de red']];
   const colW = 300; const x0 = 640 - (colW * items.length) / 2;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="150" viewBox="0 0 1280 150" role="img" aria-label="${items.map(([n, l]) => `${n} ${l}`).join(', ')}">
   <rect width="1280" height="150" rx="28" fill="${k.bg}"/>

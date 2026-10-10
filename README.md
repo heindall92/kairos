@@ -23,7 +23,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/cifras-dark.svg">
-    <img src="docs/assets/readme/cifras-light.svg" alt="Matriz de impacto 5 × 4, 28 reglas de preauditoría, 3 casos de ejemplo, 0 peticiones de red" width="100%">
+    <img src="docs/assets/readme/cifras-light.svg" alt="Matriz de impacto 5 × 4, 29 reglas de preauditoría, 3 casos de ejemplo, 0 peticiones de red" width="100%">
   </picture>
 </p>
 
@@ -37,7 +37,7 @@ Una plantilla de BIA y BCP recoge datos: funciones, RTO, RPO, MTPD, activos, cop
 - **Cuándo vuelve cada función.** Recorre la cadena de dependencias: activos TIC, otras funciones y proveedores.
 - **Si las copias cumplen el RPO.** Compara la pérdida de datos tolerable con la frecuencia real de las copias.
 - **Cuánto cuesta no llegar.** Calcula la exposición económica de cada incidente.
-- **Qué falta antes de la auditoría.** Revisa el plan con 28 reglas de ISO 22301, ISO/IEC 27001 y del ENS.
+- **Qué falta antes de la auditoría.** Revisa el plan con 29 reglas de ISO 22301, ISO/IEC 27001 y del ENS.
 
 Καιρός es, en griego, el momento oportuno: no cuánto tiempo pasa, sino si llegas a tiempo.
 
@@ -67,8 +67,8 @@ Es un único fichero HTML. Funciona sin conexión, no tiene servidor y no hace n
         <img src="docs/assets/stack/ruta.svg" height="52" alt="Ruta crítica">
         <img src="docs/assets/stack/rpo.svg" height="52" alt="RPO">
         <img src="docs/assets/stack/crisis.svg" height="52" alt="Crisis">
-        <img src="docs/assets/stack/reglas.svg" height="52" alt="28 reglas"><br>
-        <sub><code>impacto 5 × 4 · MTPD · ruta crítica · RPO · exposición · 28 reglas</code></sub>
+        <img src="docs/assets/stack/reglas.svg" height="52" alt="29 reglas"><br>
+        <sub><code>impacto 5 × 4 · MTPD · ruta crítica · RPO · exposición · 29 reglas</code></sub>
       </td>
     </tr>
     <tr>
@@ -83,7 +83,7 @@ Es un único fichero HTML. Funciona sin conexión, no tiene servidor y no hace n
         <img src="docs/assets/stack/pruebas.svg" height="52" alt="node:test">
         <img src="docs/assets/stack/playwright.svg" height="52" alt="Playwright">
         <img src="docs/assets/stack/axe.svg" height="52" alt="axe-core"><br>
-        <sub><code>node:test 15 · Playwright 89 · axe-core 0 infracciones</code></sub>
+        <sub><code>node:test 18 · Playwright 102 · axe-core 0 infracciones</code></sub>
       </td>
     </tr>
     <tr>
@@ -103,7 +103,7 @@ Es un único fichero HTML. Funciona sin conexión, no tiene servidor y no hace n
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="2"><code>version: 1.0.1&nbsp;&nbsp;·&nbsp;&nbsp;pruebas: 101 ok&nbsp;&nbsp;·&nbsp;&nbsp;licencia: GPLv2</code></td>
+      <td colspan="2"><code>version: 1.1.0&nbsp;&nbsp;·&nbsp;&nbsp;pruebas: 120 ok&nbsp;&nbsp;·&nbsp;&nbsp;licencia: GPLv2</code></td>
     </tr>
   </tfoot>
 </table>
@@ -144,7 +144,18 @@ KAIROS nace de la plantilla formativa de BIA y BCP del módulo de Gobierno, Ries
 | «RPO < RTO < MAD» | Se exige RTO < MTPD. El RPO es independiente: mide datos perdidos, no tiempo sin servicio. Una función puede tolerar 24 h parada y ninguna pérdida de datos. |
 | Equipo y escalado | Comprueba suplentes, que el umbral de activación llegue antes que el RTO más exigente y que el canal secundario no dependa de los sistemas. |
 | Pruebas registradas | RTO y RPO medidos frente a los objetivos, acciones correctivas y calendario de las próximas pruebas. |
-| — | **Preauditoría** con 28 reglas y estado de op.cont.1–4 según la categoría del ENS. |
+| — | **Preauditoría** con 29 reglas y estado de op.cont.1–4 según la categoría del ENS. |
+
+## Ecosistema: continuidad y exposición técnica
+
+KAIROS habla con [CTEM-Nexus](https://heindall92.github.io/ctem-nexus/) mediante el sobre común `yrd-ecosistema` (JSON, versión 1). Todo ocurre en el navegador: los ficheros se descargan y se importan a mano.
+
+| Sentido | Qué viaja | Dónde |
+|---|---|---|
+| KAIROS → CTEM-Nexus | Sobre `bia`: cada activo con las funciones que lo usan, su RTO, RPO, MTPD, coste por hora y criticidad. CTEM-Nexus fija con él la criticidad de negocio de sus activos. | **Exportar → Ecosistema → BIA para CTEM-Nexus** |
+| CTEM-Nexus → KAIROS | Sobre `activos`: por activo, hallazgos abiertos, críticos, altos, explotados activamente (KEV), rutas de ataque, peor hallazgo y **riesgo de interrupción** (alto, medio o bajo). | **Exportar → Ecosistema → Importar exposición de CTEM-Nexus** (o «Importar un proyecto», que reconoce el sobre) |
+
+Con la exposición importada, **Recuperación** marca los activos expuestos y enseña su ficha técnica, y la preauditoría añade **CTM-01** (NC menor) cuando un activo de una función crítica tiene un riesgo de interrupción alto: un ciberataque es entonces el escenario de interrupción más probable y conviene ensayarlo. Los activos se emparejan por identificador; en CTEM-Nexus se etiquetan con `kairos:ID`. El sobre se valida y se sanea (identificadores, límites y enumerados) como cualquier otro fichero, y un sobre de otra herramienta o de otro tipo se rechaza. Ejemplo: [`tests/fixtures/ctem-a-kairos.json`](tests/fixtures/ctem-a-kairos.json).
 
 ## <img src="docs/assets/icons/route.svg" width="20" height="20" valign="middle"/> Cómo se usa
 
@@ -195,7 +206,7 @@ mindmap
         RTO y RPO medidos
         Próximas pruebas
       Preauditoría
-        28 reglas
+        29 reglas
         ENS op.cont.1–4
       Exportar
         Plan de continuidad
@@ -229,7 +240,7 @@ mindmap
   </tr>
   <tr>
     <td><img src="docs/img/readme/crisis.png" alt="Gestión de crisis con línea de escalado"/><br><sub><b>Gestión de crisis.</b> El plan se activa a tiempo o no.</sub></td>
-    <td><img src="docs/img/readme/preauditoria.png" alt="Preauditoría con 14 NC mayores"/><br><sub><b>Preauditoría.</b> 28 reglas, severidad y acción.</sub></td>
+    <td><img src="docs/img/readme/preauditoria.png" alt="Preauditoría con 14 NC mayores"/><br><sub><b>Preauditoría.</b> 29 reglas, severidad y acción.</sub></td>
   </tr>
   <tr>
     <td><img src="docs/img/readme/panel-dark.png" alt="Panel en tema oscuro"/><br><sub><b>Tema oscuro.</b> Negro puro y verde eléctrico.</sub></td>
@@ -267,7 +278,7 @@ El elemento que más tarda **marca el ritmo**: mejorar cualquier otro no adelant
 
 **Exposición económica.** Horas por encima del RTO multiplicadas por el coste por hora de la función, por cada incidente.
 
-**Preauditoría.** 28 reglas en siete familias:
+**Preauditoría.** 29 reglas en ocho familias:
 
 | Familia | Reglas | Qué revisa |
 |---|---|---|
@@ -278,6 +289,7 @@ El elemento que más tarda **marca el ritmo**: mejorar cualquier otro no adelant
 | BCP | 5 | suplentes, activación, comunicación y sitio alternativo |
 | TST | 4 | pruebas, resultados, acciones y antigüedad |
 | REV | 2 | revisión y aprobación |
+| CTM | 1 | activo de una función crítica con riesgo de interrupción alto según CTEM-Nexus (solo si se ha importado su exposición) |
 
 Las reglas generan NC mayores, NC menores u observaciones según la criticidad y la categoría del ENS, que fija qué se exige de op.cont.1 a op.cont.4.
 
@@ -311,8 +323,8 @@ pip install -r requirements.txt && python -m playwright install chromium
 
 | Suite | Pruebas | Qué comprueba |
 |---|---|---|
-| Motor (`tests/engine.test.js`) | 15 | Curva de impacto, MTPD y criticidad; ruta crítica, tiempos típicos y ciclos; RTO alcanzable por activos, proveedores y funciones; RPO solo con activos de datos; RTO frente a MTPD; activación del plan; exigencias por categoría del ENS; pruebas; los hallazgos esperados de los tres casos y la integridad de las 28 reglas. |
-| End-to-end (`tests/e2e_app.py`) | 89 | Primera ejecución, las tres fases y nueve vistas, colores de avatar y de acento, enlaces a las otras herramientas GRC, recálculo en vivo por la cadena de dependencias, impacto y MTPD, copias, crisis, pruebas, preauditoría, asistente, exportaciones (Markdown, CSV, JSON y Excel generado sin red), importación hostil, persistencia, buscador, atajos, inglés, tema, móvil sin desplazamiento horizontal, CSP, XSS, prototype pollution e inyección de fórmulas. |
+| Motor (`tests/engine.test.js`) | 18 | Curva de impacto, MTPD y criticidad; ruta crítica, tiempos típicos y ciclos; RTO alcanzable por activos, proveedores y funciones; RPO solo con activos de datos; RTO frente a MTPD; activación del plan; exigencias por categoría del ENS; pruebas; los hallazgos esperados de los tres casos, la integridad de las 29 reglas y el intercambio con CTEM-Nexus (sobre «bia», saneado del sobre «activos» y regla CTM-01). |
+| End-to-end (`tests/e2e_app.py`) | 102 | Primera ejecución, las tres fases y nueve vistas, colores de avatar y de acento, enlaces a las siete herramientas GRC, ecosistema con CTEM-Nexus (exportar el BIA, importar la exposición, rechazar sobres ajenos, persistencia y traducción), recálculo en vivo por la cadena de dependencias, impacto y MTPD, copias, crisis, pruebas, preauditoría, asistente, exportaciones (Markdown, CSV, JSON y Excel generado sin red), importación hostil, persistencia, buscador, atajos, inglés, tema, móvil sin desplazamiento horizontal, CSP, XSS, prototype pollution e inyección de fórmulas. |
 | Accesibilidad (`tests/a11y_app.py`) | 0 infracciones | axe-core (WCAG 2.2 A/AA) en todas las vistas, los tres casos, filas desplegadas, menús y buscador, en claro y oscuro, a 1440 y 390 px. |
 
 Las pruebas usan una fecha fija: los casos tienen fechas de restauración y de revisión, y el resultado no debe depender del día en que se ejecutan. La [integración continua](.github/workflows/tests.yml) ejecuta todo en cada *push* y comprueba que `dist/` está al día.
@@ -337,7 +349,7 @@ kairos/
 │   ├── build.js                 Ensambla un único HTML con CSP por hashes
 │   ├── data/                    Tres casos de ejemplo (ficticios) y su expansión a proyecto
 │   ├── src/
-│   │   ├── engine.js            Motor: impacto, MTPD, ruta crítica, RPO, exposición, 28 reglas, op.cont
+│   │   ├── engine.js            Motor: impacto, MTPD, ruta crítica, RPO, exposición, 29 reglas, op.cont
 │   │   ├── index.html · styles.css
 │   │   └── ui/                  Idioma, núcleo, seguridad, iconos, shell por fases, vistas, E/S y eventos
 │   └── vendor/                  xlsx-js-style 1.2.0 (Apache-2.0)
@@ -359,7 +371,7 @@ kairos/
 
 Distribuido bajo licencia [GPLv2](LICENSE) · © 2026 Yoandy Ramírez Delgado. La exportación a Excel usa [xlsx-js-style](https://github.com/gitbrent/xlsx-js-style) 1.2.0 (Apache-2.0).
 
-Otras herramientas del autor: [ARGOS](https://github.com/heindall92/argos-grc) (laboratorio de práctica GRC con rutas, casos prácticos y simulacros), [Rosetta](https://github.com/heindall92/rosetta_multinorma) (ENS, ISO/IEC 27001, NIS2 e ISO/IEC 42001 en un solo mapa) y [ENS Compliance Studio](https://github.com/heindall92/grc_ens_compliance_studio) (categorización, riesgos MAGERIT y Declaración de Aplicabilidad).
+Otras herramientas del autor, que comparten el sobre de intercambio `yrd-ecosistema`: [ARGOS](https://github.com/heindall92/argos-grc) (laboratorio de práctica GRC con rutas, máquinas y simulacros), [Rosetta](https://github.com/heindall92/rosetta_multinorma) (15 normas y leyes sobre 152 controles unificados), [ENS Compliance Studio](https://github.com/heindall92/grc_ens_compliance_studio) (categorización, riesgos MAGERIT y Declaración de Aplicabilidad), [CTEM-Nexus](https://github.com/heindall92/ctem-nexus) (exposición técnica y rutas de ataque hacia los activos críticos), [ENS AD Auditor](https://github.com/heindall92/ens_ad-auditor) (Directorio Activo frente al ENS) y [Norvik](https://github.com/heindall92/Norvik_Gobernanza) (gobernanza).
 
 ## <img src="docs/assets/icons/user-round.svg" width="20" height="20" valign="middle"/> Autor
 
