@@ -3,6 +3,7 @@
 ## 1.1.1 · octubre de 2026
 
 - **Herramientas GRC del autor:** Ayuda → Acerca de pasa a ocho herramientas. Se suma **MCP-Shield**, que audita las configuraciones MCP de los asistentes de IA (Claude Desktop, Cursor, VS Code): cadena de suministro, secretos, ficheros y *tool poisoning*. Sus hallazgos entran en CTEM-Nexus 1.2.1 con su sobre `yrd-ecosistema` y llegan a Rosetta como evidencia por control.
+- **Un cambio justo antes de recargar o cerrar ya no se pierde.** El guardado se aplaza 200 ms para agrupar cambios seguidos y nada lo adelantaba al cerrar la página. La CI lo destapó: «La exposición importada sobrevive a la recarga» fallaba cuando la recarga llegaba antes de los 200 ms. Ahora se escribe en el acto al ocultar o cerrar la página (`pagehide` y `visibilitychange`) y antes de abrir otro proyecto.
 - **Pruebas.** La e2e de Acerca de comprueba las ocho tarjetas.
 
 ## 1.1.0 · octubre de 2026
