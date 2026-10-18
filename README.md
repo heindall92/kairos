@@ -103,7 +103,7 @@ Es un único fichero HTML. Funciona sin conexión, no tiene servidor y no hace n
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="2"><code>version: 1.1.0&nbsp;&nbsp;·&nbsp;&nbsp;pruebas: 120 ok&nbsp;&nbsp;·&nbsp;&nbsp;licencia: GPLv2</code></td>
+      <td colspan="2"><code>version: 1.1.1&nbsp;&nbsp;·&nbsp;&nbsp;pruebas: 120 ok&nbsp;&nbsp;·&nbsp;&nbsp;licencia: GPLv2</code></td>
     </tr>
   </tfoot>
 </table>
@@ -371,7 +371,7 @@ kairos/
 
 Distribuido bajo licencia [GPLv2](LICENSE) · © 2026 Yoandy Ramírez Delgado. La exportación a Excel usa [xlsx-js-style](https://github.com/gitbrent/xlsx-js-style) 1.2.0 (Apache-2.0).
 
-Otras herramientas del autor, que comparten el sobre de intercambio `yrd-ecosistema`: [ARGOS](https://github.com/heindall92/argos-grc) (laboratorio de práctica GRC con rutas, máquinas y simulacros), [Rosetta](https://github.com/heindall92/rosetta_multinorma) (15 normas y leyes sobre 152 controles unificados), [ENS Compliance Studio](https://github.com/heindall92/grc_ens_compliance_studio) (categorización, riesgos MAGERIT y Declaración de Aplicabilidad), [CTEM-Nexus](https://github.com/heindall92/ctem-nexus) (exposición técnica y rutas de ataque hacia los activos críticos), [ENS AD Auditor](https://github.com/heindall92/ens_ad-auditor) (Directorio Activo frente al ENS) y [Norvik](https://github.com/heindall92/Norvik_Gobernanza) (gobernanza).
+Otras herramientas del autor, que comparten el sobre de intercambio `yrd-ecosistema`: [ARGOS](https://github.com/heindall92/argos-grc) (laboratorio de práctica GRC con rutas, máquinas y simulacros), [Rosetta](https://github.com/heindall92/rosetta_multinorma) (15 normas y leyes sobre 152 controles unificados), [ENS Compliance Studio](https://github.com/heindall92/grc_ens_compliance_studio) (categorización, riesgos MAGERIT y Declaración de Aplicabilidad), [CTEM-Nexus](https://github.com/heindall92/ctem-nexus) (exposición técnica y rutas de ataque hacia los activos críticos), [ENS AD Auditor](https://github.com/heindall92/ens_ad-auditor) (Directorio Activo frente al ENS), [MCP-Shield](https://github.com/heindall92/mcp-shield) (configuraciones MCP de los asistentes de IA) y [Norvik](https://github.com/heindall92/Norvik_Gobernanza) (gobernanza).
 
 ## <img src="docs/assets/icons/user-round.svg" width="20" height="20" valign="middle"/> Autor
 
