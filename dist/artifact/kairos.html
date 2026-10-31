@@ -1481,7 +1481,8 @@ const EN = {
   'Activo de una función crítica con riesgo de interrupción alto por exposición técnica (CTEM-Nexus)': 'Asset of a critical function with a high disruption risk from technical exposure (CTEM-Nexus)',
   'Coordinar con seguridad la corrección de esos hallazgos y ensayar en el BCP el escenario de ciberataque sobre este activo.': 'Coordinate the fix of those findings with security and rehearse the cyberattack scenario on this asset in the BCP.',
   'Herramientas GRC del autor': 'GRC tools by the author', 'Estás aquí': 'You are here', 'Abrir la app': 'Open the app', 'Código': 'Code',
-  'Se complementan y comparten un formato de intercambio: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS, KAIROS cubre la continuidad, CTEM-Nexus mide la exposición técnica, ENS AD Auditor revisa el directorio, MCP-Shield audita los asistentes de IA y Norvik gobierna el conjunto.': 'They work together and share one exchange format: ARGOS trains you, Rosetta translates between frameworks, ENS Compliance Studio prepares ENS conformity, KAIROS covers continuity, CTEM-Nexus measures technical exposure, ENS AD Auditor reviews the directory, MCP-Shield audits AI assistants and Norvik governs the whole.',
+  'Se complementan y comparten un formato de intercambio: Atlas te enseña la norma, ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS, KAIROS cubre la continuidad, CTEM-Nexus mide la exposición técnica, ENS AD Auditor revisa el directorio, MCP-Shield audita los asistentes de IA y Norvik gobierna el conjunto.': 'They work together and share one exchange format: Atlas teaches you the standard, ARGOS trains you, Rosetta translates between frameworks, ENS Compliance Studio prepares ENS conformity, KAIROS covers continuity, CTEM-Nexus measures technical exposure, ENS AD Auditor reviews the directory, MCP-Shield audits AI assistants and Norvik governs the whole.',
+  'Aprender la ISO/IEC 27001 desde cero: lecciones, prácticas, simulacros CertiProf y la ciudad de Albatrel que crece contigo.': 'Learn ISO/IEC 27001 from scratch: lessons, practice, CertiProf mock exams and the city of Albatrel that grows with you.',
   'Laboratorio de práctica GRC: rutas, máquinas con flags y simulacros cronometrados de ENS, ISO/IEC 27001 y continuidad, con rangos y logros.': 'GRC practice lab: ENS, ISO/IEC 27001 and continuity paths, machines with flags and timed mock exams, with ranks and badges.',
   'Mapa multinorma: 15 normas y leyes de la UE, EE. UU. y Latinoamérica sobre 152 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.': 'Multi-framework map: 15 standards and laws from the EU, the US and Latin America on 152 unified controls, with ENS ↔ ISO equivalences aligned with CCN-STIC 825.',
   'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.': 'System categorisation, MAGERIT risk analysis, Statement of Applicability and ENS pre-audit.',
@@ -1635,7 +1636,7 @@ const E = window.KairosEngine;
 /* Librería para escribir el Excel propio (nunca lee ficheros ajenos). La versión autónoma la lleva incrustada
  * sin ejecutar; la alojada la pide al CDN con integridad (SRI). */
 const XLSX_LIB = { id: 'xlsx-escribir', cdn: 'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js', sri: 'sha384-OUW9euuUyxyHcAhTqbhI+Iyb8LMssXt/cpz0yXhs9UWG2/R/uaWdakx/4cfww7Vb' };
-const VERSION = '1.1.1';
+const VERSION = '1.1.2';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const $ = (s, r = document) => r.querySelector(s);
@@ -2370,6 +2371,7 @@ const FAQ = [
 /* Herramientas GRC del autor: el mismo bloque en Rosetta, ENS Compliance Studio, KAIROS, CTEM-Nexus y ARGOS.
  * Todas comparten el sobre de intercambio «yrd-ecosistema». Sin web publicada: solo enlace al código. */
 const SUITE = [
+  ['atlas', 'Atlas GRC', 'Aprender la ISO/IEC 27001 desde cero: lecciones, prácticas, simulacros CertiProf y la ciudad de Albatrel que crece contigo.', 'https://heindall92.github.io/atlas-grc/', 'https://github.com/heindall92/atlas-grc'],
   ['argos', 'ARGOS', 'Laboratorio de práctica GRC: rutas, máquinas con flags y simulacros cronometrados de ENS, ISO/IEC 27001 y continuidad, con rangos y logros.', 'https://heindall92.github.io/argos-grc/', 'https://github.com/heindall92/argos-grc'],
   ['rosetta', 'Rosetta', 'Mapa multinorma: 15 normas y leyes de la UE, EE. UU. y Latinoamérica sobre 152 controles unificados, con equivalencias ENS ↔ ISO alineadas con la CCN-STIC 825.', 'https://heindall92.github.io/rosetta_multinorma/', 'https://github.com/heindall92/rosetta_multinorma'],
   ['ens', 'ENS Compliance Studio', 'Categorización del sistema, análisis de riesgos MAGERIT, Declaración de Aplicabilidad y preauditoría del ENS.', 'https://heindall92.github.io/grc_ens_compliance_studio/app/dist/ens-compliance-studio.html', 'https://github.com/heindall92/grc_ens_compliance_studio'],
@@ -2381,7 +2383,7 @@ const SUITE = [
 ];
 function suiteGrc() {
   const ext = (h, l, ic) => `<a class="btn sm" href="${h}" target="_blank" rel="noopener noreferrer">${icon(ic, 14)}${l}</a>`;
-  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan y comparten un formato de intercambio: ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS, KAIROS cubre la continuidad, CTEM-Nexus mide la exposición técnica, ENS AD Auditor revisa el directorio, MCP-Shield audita los asistentes de IA y Norvik gobierna el conjunto.</p>
+  return `<section class="suite" aria-labelledby="suite-h"><h3 id="suite-h">Herramientas GRC del autor</h3><p class="muted small">Se complementan y comparten un formato de intercambio: Atlas te enseña la norma, ARGOS te entrena, Rosetta traduce entre marcos, ENS Compliance Studio prepara la conformidad con el ENS, KAIROS cubre la continuidad, CTEM-Nexus mide la exposición técnica, ENS AD Auditor revisa el directorio, MCP-Shield audita los asistentes de IA y Norvik gobierna el conjunto.</p>
     <div class="suite-grid">${SUITE.map(([id, n, d, app, repo]) => `<article class="suite-card${id === 'kairos' ? ' here' : ''}"><div class="suite-hd"><b>${n}</b>${id === 'kairos' ? '<span class="badge accent">Estás aquí</span>' : ''}</div><p>${d}</p>
       <div class="row">${id === 'kairos' || !app ? ext(repo, 'Código', 'external') : ext(app, 'Abrir la app', 'arrowRight') + ext(repo, 'Código', 'external')}</div></article>`).join('')}</div></section>`;
 }

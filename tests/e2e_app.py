@@ -281,10 +281,10 @@ with sync_playwright() as p:
 
     print("Herramientas GRC del autor")
     J(f"{K}.go('ayuda')"); page.click('[data-act="help-tab"][data-tab="acerca"]')
-    ok(page.locator(".suite-card").count() == 8, "Acerca de: ocho tarjetas (ARGOS, Rosetta, ENS Compliance Studio, KAIROS, CTEM-Nexus, ENS AD Auditor, MCP-Shield y Norvik)")
+    ok(page.locator(".suite-card").count() == 9, "Acerca de: nueve tarjetas (Atlas GRC, ARGOS, Rosetta, ENS Compliance Studio, KAIROS, CTEM-Nexus, ENS AD Auditor, MCP-Shield y Norvik)")
     ok("KAIROS" in page.locator(".suite-card.here").inner_text() and page.locator(".suite-card.here a").count() == 1, "KAIROS aparece como «Estás aquí» y solo enlaza a su código")
     suite = J("[...document.querySelectorAll('.suite a')].map(a => [a.href, a.target, a.rel])")
-    hosts = ["heindall92.github.io/argos-grc", "github.com/heindall92/argos-grc", "heindall92.github.io/rosetta_multinorma", "github.com/heindall92/rosetta_multinorma", "heindall92.github.io/grc_ens_compliance_studio", "github.com/heindall92/grc_ens_compliance_studio", "github.com/heindall92/kairos"]
+    hosts = ["heindall92.github.io/atlas-grc", "github.com/heindall92/atlas-grc", "heindall92.github.io/argos-grc", "github.com/heindall92/argos-grc", "heindall92.github.io/rosetta_multinorma", "github.com/heindall92/rosetta_multinorma", "heindall92.github.io/grc_ens_compliance_studio", "github.com/heindall92/grc_ens_compliance_studio", "github.com/heindall92/kairos"]
     ok(all(any(h in u for u, _, _ in suite) for h in hosts) and all(t == "_blank" and "noopener" in r for _, t, r in suite), "Enlaces a las apps y repositorios, en pestaña nueva con noopener")
 
     print("Seguridad del documento")
